@@ -2,10 +2,10 @@ package ru.progwards.java1.lessons.basics;
 
 public class AccuracyDoubleFloat {
     public static void main(String[] args) {
-        System.out.println(calculateAccuracy(6371.2));
+        System.out.println(calculateAccuracy(6371.2d));
     }
     public static double volumeBallDouble(double radius){
-        final float PI = 3.14f;
+        final double PI = 3.14d;
         final double KF = 1.333333333d;
         Double volume = KF * PI * radius * radius * radius;
         return volume;
@@ -17,7 +17,7 @@ public class AccuracyDoubleFloat {
         return volume;
     }
     public static double calculateAccuracy(double radius){
-        Double calculate = volumeBallDouble(radius) / volumeBallFloat((float) radius);
+        Double calculate = volumeBallDouble(radius) - volumeBallFloat((float) radius);
         return calculate;
     }
 }
