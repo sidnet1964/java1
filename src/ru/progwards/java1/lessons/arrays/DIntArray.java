@@ -47,11 +47,17 @@ public class DIntArray {
         }
         m0 = m1;
     }
+    public int at(int pos){
+        if (pos >= 0 && pos < m0.length)
+            return m0[pos];
+        else
+            return Integer.MAX_VALUE;
+    }
     public static void main(String[] args) {
         DIntArray din = new DIntArray();
         din.atInsert(0,1);
         din.add(7);
         din.atDelete(0);
-        //  System.out.println(Arrays.toString(din.m0));
+        System.out.println(din.at(0));
     }
 }
