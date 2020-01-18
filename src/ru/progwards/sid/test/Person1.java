@@ -1,13 +1,13 @@
-package ru.progwards.sid;
+package ru.progwards.sid.test;
 
-public class Person {
+public class Person1 {
     public String name;
     private int age;
     private String country;
-    public Person(){
+    public Person1(){
         country = "RU";
     }
-    public Person(String name, int age){
+    public Person1(String name, int age){
         this();
         this.name = name;
         this.age = age;

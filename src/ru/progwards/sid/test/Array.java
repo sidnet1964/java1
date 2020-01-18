@@ -1,4 +1,4 @@
-package ru.progwards.sid;
+package ru.progwards.sid.test;
 
 public class Array {
     public static void main(String[] args) {

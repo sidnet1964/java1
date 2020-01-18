@@ -1,4 +1,4 @@
-package ru.progwards.java1.lessons.figures_book;
+package ru.progwards.sid.figures_book;
 
 public class Figure {
     double dim1;

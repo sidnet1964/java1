@@ -1,4 +1,4 @@
-package ru.progwards.sid;
+package ru.progwards.sid.test;
 import java.util.Arrays;
 
 public class Eratosthenes {
