@@ -9,6 +9,7 @@ public class CalculateFibonacci {
         //  2.4 В статической функции fiboNumber, проверять параметр n
         if (n == lastFibo.n)
             return lastFibo.fibo;
+        //System.out.println("b - " + n);
         //  F[0] = 0, F[1] = 1, ..., F[n] = F[n-1] + F[n-2]
         int f_n_2 = 0;  //  F[n-2]
         int f_n_1 = 1;  //  F[n-1]
@@ -29,19 +30,21 @@ public class CalculateFibonacci {
             this.n = n;
             this.fibo = fibo;
         }
-    }
-    public static CacheInfo getLastFibo(){
-        return lastFibo;
-    }
-    public static void clearLastFibo(){
-        lastFibo = null;
+        public static CacheInfo getLastFibo(){
+            return lastFibo;
+        }
+        public static void clearLastFibo(){
+            lastFibo = null;
+        }
     }
     public static void main(String[] args) {
-        lastFibo = new CacheInfo(0,0);
-        for (int i=1; i<=10; i++)
+        lastFibo = new CacheInfo(1,1);
+        for (int i=1; i<=10; i++) {
+//            System.out.println(fiboNumber(i) + " == " + lastFibo.n + " -- " + lastFibo.fibo);
+//            System.out.println(fiboNumber(i) + " == " + lastFibo.n + " -- " + lastFibo.fibo);
             System.out.println(fiboNumber(i));
+            System.out.println(fiboNumber(i));
+        }
         System.out.println("---");
-//        System.out.println(CacheInfo.getLastFibo().fibo);
-
     }
 }
