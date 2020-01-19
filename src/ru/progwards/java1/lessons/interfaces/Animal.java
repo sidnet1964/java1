@@ -2,7 +2,7 @@ package ru.progwards.java1.lessons.interfaces;
 
 import static ru.progwards.java1.lessons.interfaces.Animal.FoodKind.*;
 
-public abstract class Animal implements FoodCompare, CompareWeight {
+public class Animal implements FoodCompare, CompareWeight {
     double weight;
     public Animal(double weight){
         this.weight = weight;
