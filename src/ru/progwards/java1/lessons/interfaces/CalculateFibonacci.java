@@ -1,6 +1,7 @@
 package ru.progwards.java1.lessons.interfaces;
 
 public class CalculateFibonacci {
+    //  20.01.20 00:10
     private static CacheInfo lastFibo;
     //  2.3 Разместить в классе CalculateFibonacci приватную статическую переменную CacheInfo lastFibo
     public static int fiboNumber(int n){
@@ -22,6 +23,12 @@ public class CalculateFibonacci {
         lastFibo.fibo = f_n;
         return f_n;
     }
+    public static CacheInfo getLastFibo(){
+        return lastFibo;
+    }
+    public static void clearLastFibo(){
+        lastFibo = null;
+    }
     public static class CacheInfo {
         //  2.2 Разместить вложенный класс CacheInfo
         public int n;       // - число, для которого рассчитываем Фибоначчи
@@ -30,21 +37,16 @@ public class CalculateFibonacci {
             this.n = n;
             this.fibo = fibo;
         }
-        public static CacheInfo getLastFibo(){
-            return lastFibo;
-        }
-        public static void clearLastFibo(){
-            lastFibo = null;
-        }
     }
     public static void main(String[] args) {
-        lastFibo = new CacheInfo(1,1);
-        for (int i=1; i<=10; i++) {
-//            System.out.println(fiboNumber(i) + " == " + lastFibo.n + " -- " + lastFibo.fibo);
-//            System.out.println(fiboNumber(i) + " == " + lastFibo.n + " -- " + lastFibo.fibo);
+        lastFibo = new CalculateFibonacci.CacheInfo(1,1);
+        for (int i=1; i<=6; i++) {
             System.out.println(fiboNumber(i));
             System.out.println(fiboNumber(i));
         }
         System.out.println("---");
+        System.out.println(lastFibo.n);
+        System.out.println(lastFibo.fibo);
+        System.out.println(getLastFibo());
     }
 }
