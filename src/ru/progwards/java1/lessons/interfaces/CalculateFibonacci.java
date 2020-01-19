@@ -8,8 +8,8 @@ public class CalculateFibonacci {
         //  2.1 Разместить в классе CalculateFibonacci функцию fiboNumber
         //  сделать сохранение одного, последнего из рассчитанных значений
         //  2.4 В статической функции fiboNumber, проверять параметр n
-        if (n == lastFibo.n)
-            return lastFibo.fibo;
+        if (n == getLastFibo().n)
+            return getLastFibo().fibo;
         //System.out.println("b - " + n);
         //  F[0] = 0, F[1] = 1, ..., F[n] = F[n-1] + F[n-2]
         int f_n_2 = 0;  //  F[n-2]
