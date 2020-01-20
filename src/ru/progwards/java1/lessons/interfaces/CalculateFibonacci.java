@@ -8,9 +8,11 @@ public class CalculateFibonacci {
         //  2.1 Разместить в классе CalculateFibonacci функцию fiboNumber
         //  сделать сохранение одного, последнего из рассчитанных значений
         //  2.4 В статической функции fiboNumber, проверять параметр n
+//        if (n == 0) return 0;
+        if (lastFibo == null)
+            lastFibo = new CalculateFibonacci.CacheInfo(0,0);
         if (n == lastFibo.n)
             return lastFibo.fibo;
-        //System.out.println("b - " + n);
         //  F[0] = 0, F[1] = 1, ..., F[n] = F[n-1] + F[n-2]
         int f_n_2 = 0;  //  F[n-2]
         int f_n_1 = 1;  //  F[n-1]
@@ -39,8 +41,8 @@ public class CalculateFibonacci {
         }
     }
     public static void main(String[] args) {
-        lastFibo = new CalculateFibonacci.CacheInfo(1,1);
-        for (int i=1; i<=6; i++) {
+//        lastFibo = new CalculateFibonacci.CacheInfo(0,0);
+        for (int i=0; i<=6; i++) {
             System.out.println(fiboNumber(i));
             System.out.println(fiboNumber(i));
         }
