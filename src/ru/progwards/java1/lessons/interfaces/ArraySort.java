@@ -14,13 +14,14 @@ public class ArraySort {
                 }
     }
     public static void main(String[] args) {
-        Food apple = new Food(1);
-        Food bear = new Food(2);
-        Food orange = new Food(3);
-        CompareWeight[] tarelka = {apple, orange, bear};
+        Cow burenka = new Cow(100);
+        Duck donald = new Duck(10);
+        Duck makdak = new Duck(10);
+        Hamster tom = new Hamster(1);
+        CompareWeight[] dvor = {tom, donald, makdak, burenka};
         //  int[] massiv = {4, 3, 2, 1};
         //  sort(massiv);
-        sort(tarelka);
-        System.out.println(Arrays.toString(tarelka));
+        sort(dvor);
+        System.out.println(Arrays.toString(dvor));
     }
 }
