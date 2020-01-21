@@ -1,6 +1,6 @@
 package ru.progwards.java1.lessons.interfaces;
 
-public class Animal implements FoodCompare  {
+public class Animal implements FoodCompare, CompareWeight  {
     double weight;
     public Animal(double weight){
         this.weight = weight;
@@ -47,11 +47,10 @@ public class Animal implements FoodCompare  {
         return Double.compare(this.getFoodPrice(), aminal.getFoodPrice());
     }
     //      Задача 3
-//    public CompareResult compareWeight(CompareWeight smthHasWeigt){
-//        //  3.4 Для класса Animal реализовать интерфейс CompareWeight
-////        int comp = Double.compare(this.weight, smthHasWeigt.compareWeight());
-//        return CompareResult.EQUAL;
-//    }
+    @Override
+    public CompareResult compareWeight(CompareWeight smthHasWeigt) {
+        return CompareResult.EQUAL;
+    }
     public static void main(String[] args) {
         Cow burenka = new Cow(100);
         Duck donald = new Duck(10);
