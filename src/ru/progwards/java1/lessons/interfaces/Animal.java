@@ -1,8 +1,6 @@
 package ru.progwards.java1.lessons.interfaces;
 
-import static ru.progwards.java1.lessons.interfaces.Animal.FoodKind.*;
-
-public class Animal implements FoodCompare, CompareWeight {
+public class Animal implements FoodCompare  {
     double weight;
     public Animal(double weight){
         this.weight = weight;
@@ -11,7 +9,7 @@ public class Animal implements FoodCompare, CompareWeight {
         return AnimalKind.ANIMAL;
     }
     public FoodKind getFoodKind(){  //  возвращает вид еды
-        return UNKNOWN;
+        return FoodKind.UNKNOWN;
     }
     public double getWeight(){
         return weight;
@@ -49,10 +47,11 @@ public class Animal implements FoodCompare, CompareWeight {
         return Double.compare(this.getFoodPrice(), aminal.getFoodPrice());
     }
     //      Задача 3
-    public CompareResult compareWeight(CompareWeight smthHasWeigt){
-        //  3.4 Для класса Animal реализовать интерфейс CompareWeight
-        return CompareResult.EQUAL;
-    }
+//    public CompareResult compareWeight(CompareWeight smthHasWeigt){
+//        //  3.4 Для класса Animal реализовать интерфейс CompareWeight
+////        int comp = Double.compare(this.weight, smthHasWeigt.compareWeight());
+//        return CompareResult.EQUAL;
+//    }
     public static void main(String[] args) {
         Cow burenka = new Cow(100);
         Duck donald = new Duck(10);
@@ -65,10 +64,10 @@ public class Animal implements FoodCompare, CompareWeight {
 //        System.out.println(makdak.equals(donald));
 //        System.out.println(makdak.equals(tom));
 //      Задача 3
-        System.out.println(burenka.compareWeight(tom));
+//        System.out.println(burenka.compareWeight(tom));
     }
     enum AnimalKind {ANIMAL, COW, HAMSTER, DUCK};
     enum FoodKind {UNKNOWN, HAY, CORN};
-    public enum CompareResult {LESS, EQUAL, GREATER};
-    //  3.2 В нем создать public enum CompareResult
+//    public enum CompareResult {LESS, EQUAL, GREATER};
+//    //  3.2 В нем создать public enum CompareResult
 }
