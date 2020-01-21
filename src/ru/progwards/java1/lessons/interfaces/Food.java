@@ -11,6 +11,10 @@ public class Food implements CompareWeight{
 
     @Override
     public CompareResult compareWeight(CompareWeight smthHasWeigt) {
+        Food foodOther = (Food)smthHasWeigt;
+        int Ves = Integer.compare(this.weight, foodOther.weight);
+        if (Ves > 0) return CompareResult.GREATER;
+        if (Ves < 0) return CompareResult.LESS;
         return CompareResult.EQUAL;
     }
 }
