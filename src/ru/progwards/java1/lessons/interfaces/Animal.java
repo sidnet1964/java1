@@ -1,6 +1,6 @@
 package ru.progwards.java1.lessons.interfaces;
 
-public class Animal implements FoodCompare, CompareWeight  {
+public class Animal implements FoodCompare, CompareWeight {
     double weight;
     public Animal(double weight){
         this.weight = weight;
