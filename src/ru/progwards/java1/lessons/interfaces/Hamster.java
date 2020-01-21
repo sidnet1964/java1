@@ -16,9 +16,4 @@ public class Hamster extends Animal {
     public double getFoodCoeff(){
         return 0.03d;
     }
-
-    @Override
-    public CompareResult compareWeight(CompareWeight smthHasWeigt) {
-        return null;
-    }
 }

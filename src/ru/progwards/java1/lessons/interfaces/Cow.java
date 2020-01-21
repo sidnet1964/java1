@@ -16,9 +16,4 @@ public class Cow extends Animal {
     public double getFoodCoeff(){
         return 0.05d;
     }
-
-    @Override
-    public CompareResult compareWeight(CompareWeight smthHasWeigt) {
-        return null;
-    }
 }
