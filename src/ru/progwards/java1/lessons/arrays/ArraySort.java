@@ -12,7 +12,7 @@ public class ArraySort {
                     a[j] = b;
                 }
     }
-    public static void main(String[] args) {
+public static void main(String[] args) {
         int[] massiv = {4, 3, 2, 1};
         sort(massiv);
         System.out.println(Arrays.toString(massiv));
