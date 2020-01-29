@@ -27,6 +27,8 @@ public class SeaBattleAlg {
     private int[] ship;
     private static int counter;        // счетчик выстрелов
     private static int direct = 1;     //  направление движения
+    private static int hits = 0;
+
 
     //  конструктор основного класса
     SeaBattleAlg(SeaBattle seaBattle, int sizeX, int sizeY) {
@@ -39,14 +41,15 @@ public class SeaBattleAlg {
     //  методы основного класса --------------------------------------
     //  сделать выстрел и обработать результат
     int fireXY(int x2, int y2){
-        if (x2 < 0 || x2 >= sizeX || y2 < 0 || y2 >= sizeY ){
-            System.out.println(seaBattle);
-            System.out.println("Выход в точке - " + x2 + " : " + y2 + " , направление = " + direct);}
+//        if (x2 < 0 || x2 >= sizeX || y2 < 0 || y2 >= sizeY ){
+//            System.out.println(seaBattle);
+//            System.out.println(this);
+//            System.out.println("Выход в точке - " + x2 + " : " + y2 + " , направление = " + direct);}
         SeaBattle.FireResult fireResult = seaBattle.fire(x2, y2);
         switch (fireResult) {
             case MISS:      field_my[x2][y2] = FIRE_MISS;   break;
-            case HIT:       field_my[x2][y2] = FIRE_HIT;    break;
-            case DESTROYED: field_my[x2][y2] = FIRE_DEST;   break;
+            case HIT:       field_my[x2][y2] = FIRE_HIT;    hits++; break;
+            case DESTROYED: field_my[x2][y2] = FIRE_DEST;   hits++; break;
             default:        field_my[x2][y2] = FIRE_UNDEF;
         }
         this.counter ++;
@@ -56,6 +59,11 @@ public class SeaBattleAlg {
     boolean analiz(int f1, int x1, int y1) {
         int fire2, x2, y2;
         boolean graniza = false;
+//        if (x1 == 9 && y1 == 9){
+//            System.out.println(seaBattle);
+//            System.out.println(this);
+//            System.out.println("Выход в точке - " + x1 + " : " + y1 + " , ориентация = " + orient);}
+
         switch (f1) {
 
             case FIRE_HIT:     //  ранен
@@ -102,6 +110,9 @@ public class SeaBattleAlg {
                 obvodka();  //  необходимо обвести корабль по периметру
                 this.palubK = 0;
                 this.orient = 0;
+//  вывод для отладки
+//                System.out.println(seaBattle);
+//                System.out.println(this);
                 break;
             default:
                 System.out.println("Что-то непонятное в - " + x1 + " : " + y1);
@@ -111,37 +122,26 @@ public class SeaBattleAlg {
 
     //  -----------------------------------------------------------------
     void obvodka(){     //  необходимо обвести корабль по периметру
+        int i1 = 0; int i2 = 0; int j1 = 0; int j2 = 0;
         switch (this.orient){
             case 0: //  однопалубный
-//                System.out.println(this.palubK + " =K1= " + this.nosX + ":" + this.nosY);
-                for (int i = Math.max(0, this.nosX-1); i < Math.min(this.nosX+this.palubK+1, this.sizeX); i++)
-                    for (int j = Math.max(0, this.nosY-1); j < Math.min(this.nosY+this.palubK+1, this.sizeY); j++) {
-                        if (this.field_my[i][j] == FIRE_DEF) {
-                            this.field_my[i][j] = FIRE_FREE;
-//                            System.out.println(field_my[i][j] + " =K= " + i + ":" + j);
-                        }
-                    }
+                i1 = Math.max(0, this.nosX - 1);    i2 = Math.min(this.nosX + this.palubK + 1, this.sizeX);
+                j1 = Math.max(0, this.nosY - 1);    j2 = Math.min(this.nosY + this.palubK + 1, this.sizeY);
                 break;
             case 1: //  горизонтальный
-                for (int i = Math.max(0, this.nosX-1); i < Math.min(this.nosX+this.palubK+1, this.sizeX); i++)
-                    for (int j = Math.max(0, this.nosY-1); j < Math.min(this.nosY+1+1, this.sizeY); j++) {
-//                        System.out.println(field_my[i][j] + " = заполнение в - " + i + " : " + j);
-                        if (this.field_my[i][j] == FIRE_DEF) {
-                            this.field_my[i][j] = FIRE_FREE;
-//                            System.out.println(field_my[i][j] + " =G= " + i + ":" + j);
-                        }
-                    }
+                i1 = Math.max(0, this.nosX - 1);    i2 = Math.min(this.nosX + 1 + this.palubK, this.sizeX);
+                j1 = Math.max(0, this.nosY - 1);    j2 = Math.min(this.nosY + 1 + 1, this.sizeY);
                 break;
             case 2: //  вертикальный
-                for (int i = Math.max(0, this.nosX-1); i < Math.min(this.nosX+1+1, this.sizeX); i++)
-                    for (int j = Math.max(0, this.nosY-1); j < Math.min(this.nosY+this.palubK+1, this.sizeY); j++) {
-//                        System.out.println(field_my[i][j] + " = заполнение в - " + i + " : " + j);
-                        if (this.field_my[i][j] == FIRE_DEF) {
-                            this.field_my[i][j] = FIRE_FREE;
-//                            System.out.println(field_my[i][j] + " =V= " + i + ":" + j);
-                        }
-                    }
+                i1 = Math.max(0, this.nosX - 1);    i2 = Math.min(this.nosX + 1 + 1, this.sizeX);
+                j1 = Math.max(0, this.nosY - 1);    j2 = Math.min(this.nosY + 1 + this.palubK , this.sizeY);
                 break;
+            }
+        for (int i = i1; i < i2; i++)
+            for (int j = j1; j < j2; j++) {
+                if (this.field_my[i][j] == FIRE_DEF) {
+                    this.field_my[i][j] = FIRE_FREE;
+                }
             }
     }
     //  -----------------------------------------------------------------
@@ -150,9 +150,8 @@ public class SeaBattleAlg {
         int fire1;
         fire1 = fireXY(x, y);
         //  если в поле пусто (fire1 = -1) - продолжаем
-        if (fire1 > FIRE_DEF){
-//            System.out.println(field_my[x][y] + " = результат в - " + x + " : " + y);
-            analiz(fire1, x, y);}
+        if (fire1 > FIRE_DEF)
+            analiz(fire1, x, y);
     }
 
     //  -----------------------------------------------------------------
@@ -165,46 +164,49 @@ public class SeaBattleAlg {
                             field_1(x, y);
                         break;
                     case DIRECT_L:
-                        if (field_my[sizeX - x - 1][y] == 0)
-                            field_1(sizeX - x - 1, y);
+                        int x0 = sizeX - x - 1;     //  обратный индекс
+                        if (field_my[x0][y] == 0)
+                            field_1(x0, y);
                         break;
                     default:
                 }
+                if (hits >= 20)
+                    return;
             }
 //            direct = - direct;  //  можно отключить
         }
     }
 
-    public String toString() {
-//        assert this.sizeX > 0 && this.sizeY > 0;
-
-        StringBuilder result = new StringBuilder(" ");
-
-        int y;
-        for(y = 0; y < this.sizeX; ++y) {
-            result.append("-").append(y % 10);
-        }
-
-//        result.append("-   координата x");
-        result.append("\n");
-
-        for(y = 0; y < this.sizeY; ++y) {
-            result.append(y).append("|");
-
-            for(int x = 0; x < this.sizeX; ++x) {
-                result.append(this.field_my[x][y] == 0 ? " "
-                        :(this.field_my[x][y] == -2 ? "~"
-                        :(this.field_my[x][y] == -1 ? "-"
-                        :(this.field_my[x][y] == 1 ? "+"
-                        :(this.field_my[x][y] == 2 ? "X"
-                        : "?"))))).append("|");
-            }
-
-            result.append("\n");
-        }
-
-        return result.toString();
-    }
+//    public String toString() {
+////        assert this.sizeX > 0 && this.sizeY > 0;
+//
+//        StringBuilder result = new StringBuilder(" ");
+//
+//        int y;
+//        for(y = 0; y < this.sizeX; ++y) {
+//            result.append("-").append(y % 10);
+//        }
+//
+////        result.append("-   координата x");
+//        result.append("\n");
+//
+//        for(y = 0; y < this.sizeY; ++y) {
+//            result.append(y).append("|");
+//
+//            for(int x = 0; x < this.sizeX; ++x) {
+//                result.append(this.field_my[x][y] == 0 ? " "
+//                        :(this.field_my[x][y] == -2 ? "~"
+//                        :(this.field_my[x][y] == -1 ? "-"
+//                        :(this.field_my[x][y] == 1 ? "+"
+//                        :(this.field_my[x][y] == 2 ? "X"
+//                        : "?"))))).append("|");
+//            }
+//
+//            result.append("\n");
+//        }
+//
+//        return result.toString();
+//    }
 
     // функция для отладки
     public static void main(String[] args) {
@@ -223,12 +225,13 @@ public class SeaBattleAlg {
     static void TestFull() {
         System.out.println("Sea battle");
         double result = 0;
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<1000; i++) {
             SeaBattle seaBattle = new SeaBattle();
             SeaBattleAlg my_game = new SeaBattleAlg(seaBattle, 10, 10);
             my_game.battleAlgorithm(seaBattle);
             result += seaBattle.getResult();
+            hits = 0;   //  обнулить
         }
-        System.out.println("Результат = " + result / 100);
+        System.out.println("Результат = " + result / 1000);
     }
 }
