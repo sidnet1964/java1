@@ -45,7 +45,16 @@ public class SeaBattleAlg {
 
     //  -----------------------------------------------------------------
     //  конструктор основного класса
-    SeaBattleAlg(SeaBattle seaBattle, int sizeX, int sizeY) {
+//    SeaBattleAlg() {
+//        this.seaBattle = seaBattle;
+//        this.sizeX = sizeX;
+//        this.sizeY = sizeY;
+//        field_my = new int[sizeX][sizeY];   //  мое рабочее поле
+//        flot = new int [5];     //{0, 4, 3, 2, 1};       //  flot[i] - количество оставшихся i-палубных кораблей
+//        stat = new int [5];     //  stat[i] - статистика результатов стрельбы
+//    }
+    //  -----------------------------------------------------------------
+    void init(SeaBattle seaBattle, int sizeX, int sizeY){
         this.seaBattle = seaBattle;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -53,7 +62,6 @@ public class SeaBattleAlg {
         flot = new int [5];     //{0, 4, 3, 2, 1};       //  flot[i] - количество оставшихся i-палубных кораблей
         stat = new int [5];     //  stat[i] - статистика результатов стрельбы
     }
-    //  -----------------------------------------------------------------
     //  методы основного класса --------------------------------------
     boolean analiz(int f1, int x1, int y1) {
         int fire2, x2, y2;
@@ -315,6 +323,7 @@ public class SeaBattleAlg {
     //  -=- -=- -=- -=- -=- -=- -=- -=- -=- -=- -=- -=- -=- -=-
     public void battleAlgorithm(SeaBattle seaBattle) {
 //        int check;
+        init(seaBattle, 10, 10);
         int[][] listInt = new int[300][3];    //  план наступления
         int[] descr1 = {2, -2, 6, -6, 0, 4, -4, 8, -8};   //  массив отклонений от диагонали
         Fill_List(listInt, descr1, true, false); //  запонить список диапазоном точек
@@ -658,7 +667,7 @@ public class Boat {
         for (int i = 0; i < retry; i++) {
 //            ///=///System.out.println("Счетчик цикла = " + i);
             SeaBattle seaBattle = new SeaBattle();
-            SeaBattleAlg my_game = new SeaBattleAlg(seaBattle, 10, 10);
+            SeaBattleAlg my_game = new SeaBattleAlg();
             my_game.battleAlgorithm(seaBattle);
             result += seaBattle.getResult();
             fullCounter += my_game.counter;
