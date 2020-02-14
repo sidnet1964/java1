@@ -9,7 +9,4 @@ public class ShortInteger extends AbsInteger{
     public String toString() {
         return Short.toString(num);
     }
-    String max_value(){
-        return Short.toString(Short.MAX_VALUE);
-    }
 }
