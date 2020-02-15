@@ -8,15 +8,21 @@ public class ArrayInteger {
     ArrayInteger(int n){
         digits = new byte[n];
     }
-
+//  .........................
     void fromInt(BigInteger value){
         String valueString = value.toString();
         for (int i = 0; i < valueString.length(); i++)
             digits[valueString.length()-i-1] = Byte.valueOf(valueString.substring(i, i+1));
     }
+    //  .........................
     BigInteger toInt(){
-        return new BigInteger(digits);
+        String rezult = "";
+        for (int i=0; i < this.digits.length; i++ ) {
+            rezult += Byte.toString(digits[digits.length-i-1]);
+        }
+            return new BigInteger(rezult);
     }
+    //  .........................
     boolean add(ArrayInteger num){
         final Byte BAZA = 10;
         Byte perenos = 0;
@@ -36,6 +42,7 @@ public class ArrayInteger {
             return true;
         return false;
     }
+    //  .........................
     @Override
 public String toString() {
     return Arrays.toString(digits);
@@ -48,6 +55,8 @@ public String toString() {
         dig2.fromInt(new BigInteger("54329"));
 //        System.out.println(dig1 + " | " + dig2);
         dig1.add(dig2);
-//        System.out.println(dig1);
+        System.out.println(dig1);
+        BigInteger dig0 = dig1.toInt();
+        System.out.println(dig0);
     }
 }
