@@ -24,20 +24,27 @@ public class ArrayInteger {
     }
     //  .........................
     boolean add(ArrayInteger num){
-        final Byte BAZA = 10;
-        Byte perenos = 0;
-        for (int i=0; i<this.digits.length; i++ ) {
-            this.digits[i] += num.digits[i] + perenos;
-            if (this.digits[i] > 9) {
-                this.digits[i] = (byte) (this.digits[i] - BAZA);
-                perenos = 1;
+        final byte BAZA = 10;
+        byte perenos = 0;
+        byte[] num_copy = new byte[0];
+        int max_len = this.digits.length;
+        if (num.digits.length <= max_len) {
+            num_copy = Arrays.copyOf(num.digits, max_len);
+            for (int i=0; i<this.digits.length; i++ ) {
+                this.digits[i] += num_copy[i] + perenos;
+                if (this.digits[i] > 9) {
+                    this.digits[i] = (byte) (this.digits[i] - BAZA);
+                    perenos = 1;
+                }
+                else
+                    perenos = 0;
             }
-            else
-                perenos = 0;
         }
+        else
+            perenos = 1;
+
         if (perenos == 1)
-            for (int i=0; i<this.digits.length; i++ )
-                this.digits[i] = 0;
+            Arrays.fill(this.digits, (byte) 0);
         else
             return true;
         return false;
@@ -50,9 +57,9 @@ public String toString() {
 
     public static void main(String[] args) {
         ArrayInteger dig1 = new ArrayInteger(5);
-        ArrayInteger dig2 = new ArrayInteger(5);
+        ArrayInteger dig2 = new ArrayInteger(4);
         dig1.fromInt(new BigInteger("12349"));
-        dig2.fromInt(new BigInteger("54329"));
+        dig2.fromInt(new BigInteger("4329"));
 //        System.out.println(dig1 + " | " + dig2);
         dig1.add(dig2);
         System.out.println(dig1);
