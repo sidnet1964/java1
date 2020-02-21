@@ -13,10 +13,13 @@ public class CharFilter {
             try {
                 Scanner scanner = new Scanner(reader);
                 while (scanner.hasNextLine()) {
+//                    String outputText = "";
                     String strFromFile = scanner.nextLine();
-                    String outputText = strFromFile.replaceAll("["+filter+"]", "");
+                    for (int i = 0; i<filter.length(); i++){
+                        strFromFile = strFromFile.replace(filter.substring(i, i+1), "");
+                    }
 //                    System.out.println(strFromFile);
-                    writer.write(outputText + "\n");
+                    writer.write(strFromFile + "\n");
                 }
             } finally {
                 reader.close();
@@ -28,7 +31,7 @@ public class CharFilter {
     }
 
     public static void main(String[] args) {
-        String filter = "+=";
+        String filter = " -,.()";
         filterFile(
                 "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file1.txt",
                 "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file2.txt",
