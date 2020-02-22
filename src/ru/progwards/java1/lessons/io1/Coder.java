@@ -3,6 +3,7 @@ package ru.progwards.java1.lessons.io1;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Coder {
@@ -19,11 +20,14 @@ public class Coder {
                 Scanner scanner = new Scanner(reader);
                 while (scanner.hasNextLine()) {
                     String strFromFile = scanner.nextLine();
-                    for (int i = 0; i<code.length; i++){
-//                        strFromFile = strFromFile.replace(code[i], "");
-                        System.out.println(code[i]+"|"+code[(int)code[i]]);
+                    char[] symbol = strFromFile.toCharArray();
+//                    System.out.println(Arrays.toString(symbol));
+                    for (int i = 0; i < symbol.length; i++){
+                        symbol[i] = code[i];
                     }
-                    writer.write(strFromFile);  //   + "\n"
+                    String strToFile = new String(symbol);  //String.valueOf(symbol);   //symbol.toString();
+//                    System.out.println(strToFile);
+                    writer.write(strToFile);  //   + "\n"
                 }
             } finally {
                 reader.close();
@@ -52,7 +56,7 @@ public class Coder {
     public static void main(String[] args) {
         char[] code = {'a', 'b', 'c'};
         codeFile(
-                "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file2.txt",
+                "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file1.txt",
                 "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file3.txt",
                 code,
                 "C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io1\\file4.txt");
