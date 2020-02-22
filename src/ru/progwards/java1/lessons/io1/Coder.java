@@ -23,7 +23,8 @@ public class Coder {
                     char[] symbol = strFromFile.toCharArray();
 //                    System.out.println(Arrays.toString(symbol));
                     for (int i = 0; i < symbol.length; i++){
-                        symbol[i] = code[i];
+//                        System.out.println(symbol[i] + "|"+(int)symbol[i]);
+                        symbol[i] = code[(int)symbol[i]];
                     }
                     String strToFile = new String(symbol);  //String.valueOf(symbol);   //symbol.toString();
 //                    System.out.println(strToFile);
