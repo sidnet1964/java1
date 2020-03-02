@@ -10,12 +10,12 @@ public class Censor {
     public static class CensorException extends RuntimeException{
         public String fileName = "";
         public CensorException(String fileName){
-            super("Неправильное имя файла");
+            super("Неправильное имя файла :");
             this.fileName = fileName;
         }
         @Override
         public String getMessage() {
-            return super.getMessage() + (fileName == null ? "" : " \"" + fileName + "\"");
+            return super.getMessage() + (fileName == null ? "null" : "\"" + fileName + "\"");
         }
     }
 
