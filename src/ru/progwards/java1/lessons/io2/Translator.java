@@ -10,7 +10,7 @@ public class Translator {
         this.inLang = inLang;
         this.outLang = outLang;
     }
-    public String translate(String sentence) throws Exception {
+    public String translate(String sentence){
         try {
         for (int i=0; i<inLang.length; i++){
             boolean toUp = false;
@@ -36,7 +36,7 @@ public class Translator {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         String[] eng = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "i"};
         String[] rus = {"раз", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "я"};  //, "я"
         Translator engRus = new Translator(eng, rus);
