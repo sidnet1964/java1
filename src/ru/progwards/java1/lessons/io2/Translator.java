@@ -11,18 +11,18 @@ public class Translator {
         this.outLang = outLang;
     }
     public String translate(String sentence) throws Exception {
+        try {
         for (int i=0; i<inLang.length; i++){
             boolean toUp = false;
             int pos = sentence.toLowerCase().indexOf(inLang[i]);
 //            System.out.println("i = " + i + " -> " + inLang[i] + " -> " + ", pos = " +pos);
             if (pos >= 0) {
-                try {
                     sentence = sentence.replace(firstUp(inLang[i]), firstUp(outLang[i]));
                     sentence = sentence.replace(inLang[i], outLang[i]);
-                } catch (Exception e) {
-                    throw e;
-                }
             }
+        }
+        } catch (Exception e) {
+            throw e;
         }
         return sentence;
     }
