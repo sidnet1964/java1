@@ -8,11 +8,6 @@ import java.util.Scanner;
 
 public class Coder {
     public static void codeFile(String inFileName, String outFileName, char[] code, String logName){
-    //  прочитать файл inFileName и перекодировать его посимвольно в соответствии с заданным шифром,
-    //  результат записать в outFileName. Шифр задается маccивом char[] code,
-    //  где каждому символу symbol оригинального файла соответствует символ
-    //  code[(int)symbol] выходного файла. В случае ошибок, в файл с именем logName
-    //  вывести название ошибки через метод класса Exception - getMessage()
         try {
             FileReader reader = new FileReader(inFileName);
             FileWriter writer = new FileWriter(outFileName);
@@ -21,13 +16,11 @@ public class Coder {
                 while (scanner.hasNextLine()) {
                     String strFromFile = scanner.nextLine();
                     char[] symbol = strFromFile.toCharArray();
-//                    System.out.println(Arrays.toString(symbol));
                     for (int i = 0; i < symbol.length; i++){
 //                        System.out.println(symbol[i] + "|"+(int)symbol[i]);
                         symbol[i] = code[(int)symbol[i]];
                     }
                     String strToFile = new String(symbol);  //String.valueOf(symbol);   //symbol.toString();
-//                    System.out.println(strToFile);
                     writer.write(strToFile);  //   + "\n"
                 }
             } finally {
