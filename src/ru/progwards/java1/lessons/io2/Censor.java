@@ -15,21 +15,18 @@ public class Censor {
         }
         @Override
         public String getMessage() {
-            return super.getMessage() + fileName == null ? "" : " \"" + fileName + "\"";
+            return super.getMessage() + (fileName == null ? "" : " \"" + fileName + "\"");
         }
     }
 
     public static void censorFile(String inoutFileName, String[] obscene){
         final String ASTER = "*";
-        try (RandomAccessFile raf = new RandomAccessFile(inoutFileName, "rw");) {
+        try (RandomAccessFile raf = new RandomAccessFile(inoutFileName, "rw")) {
             String currentLine = raf.readLine();
-//            System.out.println(currentLine);
             if (currentLine != null){
                 currentLine = new String(currentLine.getBytes("ISO-8859-1"), "UTF-8");
                 System.out.println(currentLine);
             }
-//            char[] buk = currentLine.toCharArray();
-//            System.out.println(Arrays.toString(buk));
             for (String word : obscene){
                 int len = word.length();
                 StringBuilder builder = new StringBuilder();
@@ -40,18 +37,17 @@ public class Censor {
                 currentLine = currentLine.replace(word, result);
                 System.out.println(word+"|"+result+"|"+currentLine);
             }
-//  currentLine = new String(currentLine.getBytes("ISO-8859-1"), "UTF-8");
             raf.seek(0);
             byte[] to1 = currentLine.getBytes();
             raf.write(to1);
-//            raf.writeBytes(currentLine);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CensorException(inoutFileName);
         }
     }
 
     public static void main(String[] args) {
         String[] obscene = {"Java", "Oracle", "Sun", "Microsystems"};
-        censorFile("C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io2\\file1.txt", obscene);
+//        censorFile("C:\\Users\\sidne\\IdeaProjects\\HelloWorld\\src\\ru\\progwards\\java1\\lessons\\io2\\file1.txt", obscene);
+        censorFile(null, obscene);
     }
 }
