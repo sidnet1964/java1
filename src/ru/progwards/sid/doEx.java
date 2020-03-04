@@ -32,7 +32,7 @@ public class doEx {
     }
     public void test(int n) throws IOException {
         try {
-            doSomething(0);
+            doSomething(n);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw e;
