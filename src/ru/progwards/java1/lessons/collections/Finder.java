@@ -38,7 +38,7 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
         Integer[] obj = numbers.toArray(new Integer[0]);    //  забавная конструкция, сам бы не придумал
         for (int i = 1; i < obj.length-1; i++) {  //  цикл по индексам массива
             if (obj[i] > obj[i-1] && obj[i] > obj[i+1])
-                list1.add(i);
+                list1.add(obj[i]);
             }
         return list1;
     }
@@ -63,11 +63,14 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
         int count_current = 0;
         int count_max = 0;
         for (String obj : names){
+            System.out.println(obj);
             if (obj.equals(str_max))
                 count_current++;
             else {
-                if (count_current > count_max)  //  новый максимум
-                    str_result = str_max + ":"+Integer.toString(count_current); // текущмй результат
+                if (count_current > count_max) {  //  новый максимум
+                    str_result = str_max + ":" + Integer.toString(count_current); // текущмй результат
+                    count_max = count_current;
+                }
                 str_max = obj;  //  новая последовательность
                 count_current = 1;
             }
@@ -83,9 +86,10 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
     }
     //  подготовка коллекции для работы
     public static Collection<String> fill_Str(int n){
+        String[] names = {"Василий", "Василий", "Василий", "Александр", "Борис", "Григорий", "Василий", "Григорий", "Василий", "Борис", "Григорий", "Дмитрий", "Александр", "Дмитрий", "Борис", "Григорий"};
         Collection<String> list1 = new ArrayList<>();
-        for (int i = 1; i < n+1; i++)
-            list1.add("-"+Integer.toString(10 - i % 10)+"-");
+        for (int i = 0; i < names.length; i++)
+            list1.add(names[i]);
         return list1;
     }
 
@@ -94,7 +98,7 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
 //        Collection<Integer> list1 = fillFull(22);
 //        Collection<String> list1 = fill_Str(22);
         List<String> list1 = (List<String>) fill_Str(22);
-        list1.sort(null);
+//        list1.sort(null);
         System.out.println(list1);
 //        System.out.println(Arrays.toString(list1.toArray()));
 //        System.out.println(findMinSumPair(list1));
