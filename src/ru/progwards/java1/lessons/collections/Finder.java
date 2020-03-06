@@ -1,5 +1,7 @@
 package ru.progwards.java1.lessons.collections;
 
+import org.apache.logging.log4j.core.appender.rolling.action.IfAccumulatedFileCount;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,21 +58,57 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
         }
     return true;
     }
+//  найдите максимальное количество повторяющихся подряд элементов. Результат вернуть
+//  в виде строки <элемент>:<количество>, например Василий:5.
+    public static String findSimilar(Collection<String> names){
+        List<String> list1 = new ArrayList();  //  для результата
+//        System.out.println(names);
+//        System.out.println(names.getClass());
+//        for (int i = 0; i < names.size(); i++) {  //  цикл по индексам коллекции
+        String str_result = "";
+        String str_max = null;
+        int count_current = 0;
+        int count_max = 0;
+        for (String obj : names){
+            if (obj.equals(str_max))
+                count_current++;
+            else {
+                if (count_current > count_max)  //  новый максимум
+                    str_result = str_max + ":"+Integer.toString(count_current); // текущмй результат
+                str_max = obj;  //  новая последовательность
+                count_current = 1;
+            }
+//            if (names.)
+        }
+//        list1.
+    return str_result;
+    }
     //  подготовка коллекции для работы
     public static Collection<Integer> fillFull(int n){
         Collection<Integer> list1 = new ArrayList<>();
         for (int i = 1; i < n+1; i++)
-            list1.add(11 - i % 10); //
+            list1.add(10 - i % 10); //
+        return list1;
+    }
+    //  подготовка коллекции для работы
+    public static Collection<String> fill_Str(int n){
+        Collection<String> list1 = new ArrayList<>();
+        for (int i = 1; i < n+1; i++)
+            list1.add("-"+Integer.toString(10 - i % 10)+"-");
         return list1;
     }
 
     public static void main(String[] args) {
-        List<Integer> list1 = new ArrayList<>();
-//        Collection<Integer> list1 = fillFull(10);
+//        List<Integer> list1 = new ArrayList<>();
+//        Collection<Integer> list1 = fillFull(22);
+//        Collection<String> list1 = fill_Str(22);
+        List<String> list1 = (List<String>) fill_Str(22);
+        list1.sort(null);
         System.out.println(list1);
 //        System.out.println(Arrays.toString(list1.toArray()));
-        System.out.println(findMinSumPair(list1));
-        System.out.println(findLocalMax(list1));
-        System.out.println(findSequence(list1));
+//        System.out.println(findMinSumPair(list1));
+//        System.out.println(findLocalMax(list1));
+//        System.out.println(findSequence(list1));
+        System.out.println(findSimilar(list1));
     }
 }
