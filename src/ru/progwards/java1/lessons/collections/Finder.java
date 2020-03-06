@@ -1,7 +1,5 @@
 package ru.progwards.java1.lessons.collections;
 
-import org.apache.logging.log4j.core.appender.rolling.action.IfAccumulatedFileCount;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +24,6 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
             ind_min = i;
         }
     }
-//    System.out.println(ind_min + "|" + sum_min);
     list1.add(ind_min);
     list1.add(ind_min+1);
     return list1;
@@ -61,10 +58,6 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
 //  найдите максимальное количество повторяющихся подряд элементов. Результат вернуть
 //  в виде строки <элемент>:<количество>, например Василий:5.
     public static String findSimilar(Collection<String> names){
-        List<String> list1 = new ArrayList();  //  для результата
-//        System.out.println(names);
-//        System.out.println(names.getClass());
-//        for (int i = 0; i < names.size(); i++) {  //  цикл по индексам коллекции
         String str_result = "";
         String str_max = null;
         int count_current = 0;
@@ -78,9 +71,7 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
                 str_max = obj;  //  новая последовательность
                 count_current = 1;
             }
-//            if (names.)
         }
-//        list1.
     return str_result;
     }
     //  подготовка коллекции для работы
