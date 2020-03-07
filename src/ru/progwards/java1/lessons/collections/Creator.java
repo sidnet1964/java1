@@ -26,8 +26,6 @@ public class Creator {
             if (j == n )
                 break;
         }
-//        list0.addAll(list1);
-//        return list0;
         return list1;   //  возвращаем список LinkedList как потомка Collection
     }
 //  создать коллекцию и заполнить ее тройками чисел. Каждая тройка создается по алгоритму:

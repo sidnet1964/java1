@@ -59,6 +59,7 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
 //        }
 //        i++;
 //    }
+//  общая часть
     list1.add(ind_min);
     list1.add(ind_min+1);
     return list1;
@@ -70,24 +71,40 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
         List<Integer> list1 = new ArrayList();  //  для результата
         if (numbers.size() < 3)
             return list1;
-        Integer[] obj = numbers.toArray(new Integer[0]);    //  забавная конструкция, сам бы не придумал
-        for (int i = 1; i < obj.length-1; i++) {  //  цикл по индексам массива
-            if (obj[i] > obj[i-1] && obj[i] > obj[i+1])
-                list1.add(obj[i]);
-            }
+//  вариант 1 - с преобразованием коллекции в массив
+//        Integer[] obj = numbers.toArray(new Integer[0]);
+//        for (int i = 1; i < obj.length-1; i++) {  //  цикл по индексам массива
+//            if (obj[i] > obj[i-1] && obj[i] > obj[i+1])
+//                list1.add(obj[i]);
+//            }
+//  вариант 2 - с преобразованием коллекции в список
+        ArrayList<Integer> list0 = new ArrayList<>(numbers);
+        for (int i = 1; i < list0.size()-1; i++) {  //  цикл по индексам списка
+            if (list0.get(i) > list0.get(i-1) && list0.get(i) > list0.get(i+1))
+                list1.add(list0.get(i));
+        }
+//  общая часть
         return list1;
     }
 //   - проверить, содержит ли коллекция все числа от 1 до size(), порядок может быть произвольный
     public static boolean findSequence(Collection<Integer> numbers){
         if (numbers.isEmpty())
             return false;
-        Integer[] obj = numbers.toArray(new Integer[0]);    //  забавная конструкция, сам бы не придумал
-        Arrays.sort(obj);
-//        System.out.println(Arrays.toString(obj));
-        for (int i = 0; i < obj.length; i++) {  //  цикл по индексам массива
-            if (obj[i] != i+1)
+//  вариант 1 - с преобразованием коллекции в массив
+//        Integer[] obj = numbers.toArray(new Integer[0]);
+//        Arrays.sort(obj);
+//        for (int i = 0; i < obj.length; i++) {  //  цикл по индексам массива
+//            if (obj[i] != i+1)
+//                return false;
+//        }
+//  вариант 2 - с преобразованием коллекции в список
+        ArrayList<Integer> list0 = new ArrayList<>(numbers);
+        list0.sort(null);
+        for (int i = 0; i < list0.size(); i++) {  //  цикл по индексам списка
+            if (list0.get(i) != i+1)
                 return false;
         }
+//  общая часть
     return true;
     }
 //  найдите максимальное количество повторяющихся подряд элементов. Результат вернуть
@@ -135,9 +152,9 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
 //        Collection<String> list1 = fill_Str(22);
 //        list1.sort(null);
 //        System.out.println(Arrays.toString(list1.toArray()));
-        System.out.println(findMinSumPair(list1));
+//        System.out.println(findMinSumPair(list1));
 //        System.out.println(findLocalMax(list1));
-//        System.out.println(findSequence(list1));
+        System.out.println(findSequence(list1));
 //        List<String> list1 = (List<String>) fill_Str(22);
 //        System.out.println(list1);
 //        System.out.println(findSimilar(list1));
