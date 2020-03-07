@@ -9,21 +9,56 @@ public class Finder {
 //  найти 2 соседних числа в коллекции сумма которых минимальна,
 //  вернуть коллекцию, содержащую индексы этих чисел
 public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
-    List<Integer> list1 = new ArrayList();  //  для результата
+    int sum_min = 0;    //  переменная для суммы
+    int ind_min = 0;    //  переменная для индекса
+    List<Integer> list1 = new ArrayList();  //  список для возврата результата
     if (numbers.isEmpty())
         return list1;
     if (numbers.size() < 2)
         return list1;
-    Integer[] obj = numbers.toArray(new Integer[0]);    //  забавная конструкция, сам бы не придумал
-    int sum_min = 0;
-    int ind_min = 0;
-    for (int i = 0; i < obj.length-1; i++) {  //  цикл по индексам массива
-        int sum = obj[i] + obj[i+1];
+//  вариант 1 - с преобразованием коллекции в массив
+//    Integer[] obj = numbers.toArray(new Integer[0]);    //  забавная конструкция, сам бы не придумал
+//    sum_min = obj[0] + obj[1];  //  стартовое значение минимума
+//    for (int i = 0; i < obj.length-1; i++) {  //  цикл по индексам массива
+//        int sum = obj[i] + obj[i+1];
+//        if (sum < sum_min){
+//            sum_min = sum;
+//            ind_min = i;
+//        }
+//    }
+//  вариант 2 - с преобразованием коллекции в список
+    ArrayList<Integer> list0 = new ArrayList<>(numbers);
+    sum_min = list0.get(0) + list0.get(1);  //  стартовое значение минимума
+    for (int i = 1; i < list0.size()-1; i++) {  //  цикл по индексам списка начиная с 1
+        int sum = list0.get(i) + list0.get(i+1);
         if (sum < sum_min){
             sum_min = sum;
             ind_min = i;
         }
     }
+//  вариант 3 - с использованием коллекции
+//    int i = 0;      //  внешний индекс
+//    int obj_0 = 0;  //  стартовое значение
+//    int obj_1 = 0;
+//    for (Integer obj : numbers) {
+//        switch (i){
+//            case 0:
+//                obj_0 = obj;
+//                break;
+//            case 1:
+//                obj_1 = obj;
+//                sum_min = obj_0 + obj_1;
+//                obj_0 = obj_1;  //  запоминаем для следующего шага
+//                break;
+//            default:
+//                obj_1 = obj;
+//                if ( obj_0 + obj_1 < sum_min){
+//                    sum_min = obj_0 + obj_1;
+//                    ind_min = i-1;
+//                }
+//        }
+//        i++;
+//    }
     list1.add(ind_min);
     list1.add(ind_min+1);
     return list1;
@@ -95,15 +130,16 @@ public static Collection<Integer> findMinSumPair(Collection<Integer> numbers){
 
     public static void main(String[] args) {
 //        List<Integer> list1 = new ArrayList<>();
-//        Collection<Integer> list1 = fillFull(22);
-//        Collection<String> list1 = fill_Str(22);
-        List<String> list1 = (List<String>) fill_Str(22);
-//        list1.sort(null);
+        Collection<Integer> list1 = fillFull(11);
         System.out.println(list1);
+//        Collection<String> list1 = fill_Str(22);
+//        list1.sort(null);
 //        System.out.println(Arrays.toString(list1.toArray()));
-//        System.out.println(findMinSumPair(list1));
+        System.out.println(findMinSumPair(list1));
 //        System.out.println(findLocalMax(list1));
 //        System.out.println(findSequence(list1));
-        System.out.println(findSimilar(list1));
+//        List<String> list1 = (List<String>) fill_Str(22);
+//        System.out.println(list1);
+//        System.out.println(findSimilar(list1));
     }
 }
