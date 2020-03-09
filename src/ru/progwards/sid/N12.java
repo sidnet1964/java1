@@ -15,7 +15,7 @@ public class N12 {
         for (Integer i : list)
             result += i;
         for (int i = list.size() - 1; i >= 0; i--)
-            if (list.get(i) < result / 100)
+            if (list.get(i) >= result / 100)
                 list.remove(i);
 
         return list;
@@ -27,7 +27,6 @@ public class N12 {
             if (intObj % 3 == 0) {
                 int ind = iterator.nextIndex() - 1 ;
                 iterator.set(ind);
-                System.out.println(ind);
             }
         }
 //        for (; iterator.hasNext(); ) {
