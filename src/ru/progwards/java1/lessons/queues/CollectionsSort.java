@@ -15,7 +15,7 @@ public class CollectionsSort {
                     Collections.swap(arrayList, i, j);
         long start2 = System. currentTimeMillis();
 //        System. out.println( "Сортировка # 0 - " + iSize + " = " + (start1 - start0) + " : " + (start2 - start1));
-//        System.out.println(arrayList);
+        System.out.println(arrayList);
     }
 
 //  переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции
@@ -103,9 +103,10 @@ public class CollectionsSort {
     }
     //  подготовка коллекции для работы
     public static Collection<Integer> fillFull(int n){
-        Collection<Integer> list1 = new ArrayList<>();
-        for (int i = 1; i < n+1; i++)
-            list1.add(1_000 - i % 1_000); //
+        Integer[] list0 = {89, 80, 85, 68, 93, 98, 3};
+        Collection<Integer> list1 = new ArrayList(Arrays.asList(list0));
+//        for (int i = 1; i < n+1; i++)
+//            list1.add(1_000 - i % 1_000); //
         return list1;
     }
 
