@@ -14,7 +14,7 @@ public class Order {
         else if (sum < 20_000)
             level = 2;
         else
-            level = 3;
+            level = 1;
     }
 
     public double getSum() {

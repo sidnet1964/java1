@@ -9,7 +9,7 @@ public class OrderQueue {
 
     //  конструктор
     public OrderQueue() {
-        PriorityQueue<Order> priQueue = new PriorityQueue<Order>(comparator);
+        this.priQueue = new PriorityQueue<Order>(comparator);
     }
     //  компаратор для очереди
     Comparator<Order> comparator = new Comparator<Order>() {
@@ -41,18 +41,18 @@ public class OrderQueue {
         int sum_zak = 4000;  //  сумма заказа
         OrderQueue orderQueue = new OrderQueue();   //  создать объект основного класса
         Order order1 = new Order(1000);
-        orderQueue.add(order1);
-        orderQueue.add(order1);
-//        orderQueue.add(new Order(sum_zak += 4000));
-//        orderQueue.add(new Order(sum_zak += 4000));
-//        orderQueue.add(new Order(sum_zak += 4000));
-//        orderQueue.add(new Order(sum_zak += 4000));
-//        orderQueue.add(new Order(sum_zak += 4000));
-//        orderQueue.add(new Order(sum_zak += 4000));
+//        orderQueue.add(order1);
+//        orderQueue.add(order1);
+        orderQueue.add(new Order(sum_zak += 4000));
+        orderQueue.add(new Order(sum_zak += 4000));
+        orderQueue.add(new Order(sum_zak += 4000));
+        orderQueue.add(new Order(sum_zak += 4000));
+        orderQueue.add(new Order(sum_zak += 4000));
+        orderQueue.add(new Order(sum_zak += 4000));
 
         Order ord;
         while ((ord = orderQueue.get()) != null) {
-            System.out.println(ord.getNum());
+            System.out.println(ord.getNum() + " | " + ord.getSum());
         }
     }
 }
