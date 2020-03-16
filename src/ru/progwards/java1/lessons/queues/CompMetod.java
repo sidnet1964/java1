@@ -51,3 +51,18 @@ public class CompMetod {
         }
     }
 }
+
+//  List<Worker> workers = new ArrayList<>();
+//  workers.sort(Comparator.comparing(Worker::getName).thenComparing(Worker::getAge));
+//  public static Comparator<Worker> SORT_BY_NAME_AGE = new Comparator<Worker>() {
+//        @Override
+//        public int compare(Worker w1, Worker w2) {
+//            int i = w1.getName().compareTo(w2.getName());
+//            if (i == 0) {
+//                i = w1.getAge() - w2.getAge();
+//            }
+//            return i;
+//        }
+//
+//
+//    };
