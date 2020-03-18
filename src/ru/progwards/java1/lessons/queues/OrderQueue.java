@@ -23,7 +23,8 @@ public class OrderQueue {
         @Override
         public int compare(Order w1, Order w2) {
 //            int i = w1.getLevel().compareTo(w2.getLevel());
-            int i = w1.getLevel() - w2.getLevel();
+            int i = Integer.compare(w1.getLevel(), w2.getLevel());
+//            int i = w1.getLevel() - w2.getLevel();
             if (i == 0) {
                 i = w1.getNum() - w2.getNum();
             }
