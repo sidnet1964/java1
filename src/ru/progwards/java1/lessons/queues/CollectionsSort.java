@@ -5,72 +5,54 @@ public class CollectionsSort {
 
     //  переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции
     public static void mySort(Collection<Integer> data){
-        long start0 = System. currentTimeMillis();
         int iSize = data.size();    //  размер коллекции
         ArrayList<Integer> arrayList = new ArrayList<>(data);
-        long start1 = System. currentTimeMillis();
         for (int i = 0; i < iSize; i++)         //  цикл по всем элементам массива
             for (int j = i+1; j < iSize; j++)   //  цикл по элементам справа от текущего
                 if (arrayList.get(i) > arrayList.get(j))   //  сравнить элементы из разных циклов
                     Collections.swap(arrayList, i, j);
-        long start2 = System. currentTimeMillis();
-//        System. out.println( "Сортировка # 0 - " + iSize + " = " + (start1 - start0) + " : " + (start2 - start1));
-        System.out.println(arrayList);
     }
 
 //  переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции
 //  вариант работы с итератором, самый медленный     
-    public static void mySortIt(Collection<Integer> data){
-        long start0 = System. currentTimeMillis();
-        int iSize = data.size();    //  размер коллекции
-        ArrayList<Integer> arrayList = new ArrayList<>(data);
-        long start1 = System. currentTimeMillis();
-        ListIterator<Integer> list0 = arrayList.listIterator(0);
-        while (list0.hasNext()) {
-            Integer Obj0 = list0.next();   //  элемент слева
-            ListIterator<Integer> list1 = arrayList.listIterator(list0.nextIndex());
-            while (list1.hasNext()){
-                Integer Obj1 = list1.next();   //  элемент справа
-//                System.out.println(arrayList);
-                if (Obj0 > Obj1){
-                    list0.set(Obj1);
-                    list1.set(Obj0);
-                    Obj0 = Obj1;
-//                    System.out.println(list0.nextIndex() + "|" + Obj0 + " + "+ list1.nextIndex() + "|" + Obj1);
-                }
-            }
-        }
-        long start2 = System. currentTimeMillis();
-//        System. out.println( "Сортировка # 1 - " + iSize + " = " + (start1 - start0) + " : " + (start2 - start1));
-//        System.out.println(arrayList);
-    }
+//    public static void mySortIt(Collection<Integer> data){
+//        int iSize = data.size();    //  размер коллекции
+//        ArrayList<Integer> arrayList = new ArrayList<>(data);
+//        ListIterator<Integer> list0 = arrayList.listIterator(0);
+//        while (list0.hasNext()) {
+//            Integer Obj0 = list0.next();   //  элемент слева
+//            ListIterator<Integer> list1 = arrayList.listIterator(list0.nextIndex());
+//            while (list1.hasNext()){
+//                Integer Obj1 = list1.next();   //  элемент справа
+//                if (Obj0 > Obj1){
+//                    list0.set(Obj1);
+//                    list1.set(Obj0);
+//                    Obj0 = Obj1;
+//                }
+//            }
+//        }
+//    }
+
 //  - найти минимальный элемент с использованием функции min()
 //  - переместить его в новую коллекцию
     public static void minSort(Collection<Integer> data){
-        long start0 = System. currentTimeMillis();
         int iSize = data.size();    //  размер коллекции
         ArrayList<Integer> arrayList = new ArrayList<>(data);   //  исходный список
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>(data.size()); //  новый список
-        long start1 = System. currentTimeMillis();
         while (arrayList.size() > 0){
             Integer intObj = Collections.min(arrayList);    //  найти минимальный элемент
             arrayList.remove(intObj);                       //  удалить его из исходной коллекции
             arrayDeque.add(intObj);                         //  добавить элемент в новую коллекцию
         }
         arrayList.addAll(arrayDeque);
-        long start2 = System. currentTimeMillis();
-//        System. out.println( "Сортировка # 2 - " + iSize + " = " + (start1 - start0) + " : " + (start2 - start1));
-//        System.out.println(arrayList);
     }
+
 //   использовать метод sort из Collections
     static void collSort(Collection<Integer> data){
-        long start0 = System. currentTimeMillis();
         int iSize = data.size();    //  размер коллекции
         ArrayList<Integer> arrayList = new ArrayList<>(data);
         long start1 = System. currentTimeMillis();
         arrayList.sort(null);
-        long start2 = System. currentTimeMillis();
-//        System. out.println( "Сортировка # 3 - " + iSize + " = " + (start1 - start0) + " : " + (start2 - start1));
     }
     public static Collection<String> compareSort(){
         ArrayList<String> arrayList = new ArrayList<>();    //  для возврата

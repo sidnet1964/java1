@@ -46,8 +46,8 @@ public class Calculate {
         return rez;
     }
     public static void main(String[] args) {
-//        System.out.println(calculation1());
-        System.out.println(calculation2());
+        System.out.println(calculation1());
+//        System.out.println(calculation2());
     }
 
 }

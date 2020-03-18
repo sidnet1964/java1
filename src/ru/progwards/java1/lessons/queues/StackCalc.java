@@ -55,8 +55,8 @@ public class StackCalc {
     public void div(){
         double rez = 1;
         if (stack.size() > 1 ) {
-            rez /= stack.pop();
-            rez *= stack.pop();
+            rez = stack.pop();
+            rez = stack.pop() / rez;
             stack.push(rez);
         }
     }
