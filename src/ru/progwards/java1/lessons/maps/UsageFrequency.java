@@ -55,11 +55,14 @@ public class UsageFrequency {
                 while (scanner.hasNext()) {
                     String word = scanner.next();
 //                    System.out.println(word);
-                    if (word.length() == 1){
-                        char[] letter = word.toCharArray(); //  преобразовать в символ
-                        if (!(Character.isDigit(letter[0]) || Character.isLetter(letter[0])))
-                            continue;
+                    char[] letter = word.toCharArray(); //  преобразовать в символ
+                    word = "";
+                    for (char simbol : letter) {
+                        if ((Character.isDigit(simbol) || Character.isLetter(simbol)))
+                            word = word + simbol;
                     }
+                    if (word.isEmpty())
+                        continue;
                     Integer value = hashMap.get(word);
                     if (value == null)  //  такого слова еще нет
                         hashMap.put(word, 1);
