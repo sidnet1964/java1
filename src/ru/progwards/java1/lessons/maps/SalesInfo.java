@@ -41,13 +41,10 @@ public class SalesInfo {
         int qty;        //  количество
         double sum;     //  сумма
         int countLine = 0;  //  счетчик строк
-        boolean fullLine;   //  признак полноты
         File file = new File(fileName);
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
-                fullLine = false;
                 String subL = scanner.nextLine();
-//                System.out.println(subL);
                 try (Scanner scan1 = new Scanner(subL).useDelimiter("\\s*,\\s*")) {
                     if (scan1.hasNext())
                         name = scan1.next();  //  первое поле
@@ -61,6 +58,8 @@ public class SalesInfo {
                     if (scan1.hasNextInt())
                         sum = scan1.nextDouble();  //  4-е поле
                     else continue;   //  пропускаем текущую строку
+                    if (scan1.hasNext())    //  есть ли лишние поля
+                        continue;
 //  теперь все хорошо - четыре поля сформированы
                     customers.add(new Client(name, product, qty, sum));
                     countLine++;
@@ -69,7 +68,6 @@ public class SalesInfo {
         } catch (FileNotFoundException e) {
             System. out.println("Файл не найден");
         }
-//        System.out.println(customers);
         return countLine;
     }
 //  вернуть список товаров, отсортированный по наименованию товара
@@ -89,8 +87,6 @@ public class SalesInfo {
         Map<String, AbstractMap.SimpleEntry<Double, Integer>> treeMap = new TreeMap<>();
         for (Client c1 : customers){
             var value = treeMap.get(c1.name);
-//            var entries = hashMap.entrySet();
-//            Set<Map.Entry<Integer, String>> entries = hashMap.entrySet();
             if (value == null) {  //  такого слова еще нет
                 AbstractMap.SimpleEntry<Double, Integer> order = new AbstractMap.SimpleEntry<Double, Integer>(c1.sum, c1.qty);
                 treeMap.put(c1.name, order);
@@ -101,7 +97,6 @@ public class SalesInfo {
                 AbstractMap.SimpleEntry<Double, Integer> order = new AbstractMap.SimpleEntry<Double, Integer>(sum, qty);
                 treeMap.put(c1.name, order);
             }
-//                treeMap.put(c1.name, value + c1.sum);
         }
         return treeMap;
     }
