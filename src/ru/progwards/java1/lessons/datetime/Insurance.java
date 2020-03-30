@@ -49,6 +49,16 @@ public class Insurance {
             break;
         }
     }
+//  вернуть строку формата "Insurance issued on " + start + validStr,
+//  где validStr = " is valid", если страховка действительна на данный момент
+//  и " is not valid", если она недействительна.
+    @Override
+    public String toString() {
+        if (checkValid(ZonedDateTime.now()))
+            return "Insurance issued on " + start + " is valid";
+        else
+            return "Insurance issued on " + start + "  is not valid";
+    }
 
     public static enum FormatStyle {SHORT, LONG, FULL};
 //  установить продолжительность действия страховки
@@ -82,7 +92,6 @@ public class Insurance {
             return true;
         return false;
     }
-
     public static void main(String[] args) {
         Insurance str1 = new Insurance("2020-02-29T10:15:30+01:00[Europe/Paris]", FULL);
         Insurance str2 = new Insurance("2020-02-29T10:10:43.9316671+03:00[Europe/Moscow]", FULL);
@@ -94,10 +103,14 @@ public class Insurance {
         str3.setDuration(Duration.ofHours(750));    //  750 часов
         str4.setDuration(ZonedDateTime.now());      //  на текущий момент - PT744H32M53
 
-        System.out.println(str1.checkValid(ZonedDateTime.now()));
-        System.out.println(str2.checkValid(ZonedDateTime.now()));
-        System.out.println(str3.checkValid(ZonedDateTime.now()));
-        System.out.println(str4.checkValid(ZonedDateTime.now()));
+//        System.out.println(str1.checkValid(ZonedDateTime.now()));
+//        System.out.println(str2.checkValid(ZonedDateTime.now()));
+//        System.out.println(str3.checkValid(ZonedDateTime.now()));
+//        System.out.println(str4.checkValid(ZonedDateTime.now()));
+        System.out.println(str1);
+        System.out.println(str2);
+        System.out.println(str3);
+        System.out.println(str4);
     }
 }
 //  2019-12-31T08:04:43.9316671+03:00[Europe/Moscow]
