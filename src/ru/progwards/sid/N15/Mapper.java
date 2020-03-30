@@ -36,7 +36,7 @@ public class Mapper {
         for (int i = 0; i <= 10; i+=2) hashMap.put(i, "Число " + i);
         System.out.println(fillHoles(hashMap, 12));
         TreeMap<Integer, String> treeMap = new TreeMap<>();
-//        for (int i = 0; i <= 20; i+=2) treeMap.put(i, "Число " + i);
+        for (int i = 0; i <= 20; i+=2) treeMap.put(i, "Число " + i);
         checkAndAdd(treeMap, 0, "Team 11");
         checkAndAdd(treeMap, 0, "Team 11");
     }
