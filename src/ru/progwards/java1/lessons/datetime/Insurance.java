@@ -79,7 +79,35 @@ public class Insurance {
         //System.out.println(duration);
     }
 //  установить продолжительность действия страховки
+//  SHORT - целое число миллисекунд (тип long)
+//  LONG  - ISO_LOCAL_DATE_TIME - как период, например “0000-06-03T10:00:00” означает,
+//  что продолжительность действия страховки 0 лет, 6 месяцев, 3 дня 10 часов.
+//  FULL - стандартный формат Duration, который получается через toString()
     public void setDuration(String strDuration, FormatStyle style){
+        switch (style){
+            case SHORT:
+                long milSec = Long.parseLong(strDuration);
+                this.duration = Duration.ofMillis(milSec);
+                break;
+            case FULL:
+                this.duration = Duration.parse(strDuration);
+                break;
+            case LONG:
+//                LocalDateTime localDateTime0 = LocalDateTime.of(0,0,0,0,0,0, 0);
+                LocalDateTime lDT = LocalDateTime.parse(strDuration, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                int year = lDT.getYear();
+                int mont = lDT.getMonthValue();
+                int days = lDT.getDayOfMonth();
+                int hour = lDT.getHour();
+                int minu = lDT.getMinute();
+                int seco = lDT.getSecond();
+
+                this.duration = Duration.between(this.start,
+                        this.start.plusYears(year).plusMonths(mont).plusDays(days).plusHours(hour).plusMinutes(minu).plusSeconds(seco));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + style);
+        }
     }
 //  проверить действительна ли страховка на указанную дату-время
     public boolean checkValid(ZonedDateTime dateTime){
@@ -98,22 +126,23 @@ public class Insurance {
     }
     public static void main(String[] args) {
 //        Insurance str1 = new Insurance("2020-02-29T10:15:30+01:00[Europe/Paris]", FULL);
-//        Insurance str2 = new Insurance("2020-02-29T10:10:43.9316671+03:00[Europe/Moscow]", FULL);
-        Insurance str3 = new Insurance("2020-04-01T10:00:00", LONG);
+        Insurance str2 = new Insurance("2020-01-31T22:10:20.445207+03:00[Europe/Moscow]", FULL);
+//        Insurance str3 = new Insurance("2020-04-01T10:00:00", LONG);
 //        Insurance str4 = new Insurance("2020-02-29", SHORT);
 
 //        str1.setDuration(1,0,0);
 //        str2.setDuration(1,15,0);
-        str3.setDuration(Duration.ofHours(48));    //  750 часов
+//        str3.setDuration(Duration.ofHours(48));    //  750 часов
 //        str4.setDuration(ZonedDateTime.now());      //  на текущий момент - PT744H32M53
-
+//        str2.setDuration("100", Insurance.FormatStyle.SHORT);
+        str2.setDuration("0000-01-01T10:10:10", Insurance.FormatStyle.LONG);
 //        System.out.println(str1.checkValid(ZonedDateTime.now()));
 //        System.out.println(str2.checkValid(ZonedDateTime.now()));
 //        System.out.println(str3.checkValid(ZonedDateTime.now()));
 //        System.out.println(str4.checkValid(ZonedDateTime.now()));
 //        System.out.println(str1);
-//        System.out.println(str2);
-        System.out.println(str3);
+        System.out.println(str2);
+//        System.out.println(str3);
 //        System.out.println(str4);
     }
 }
