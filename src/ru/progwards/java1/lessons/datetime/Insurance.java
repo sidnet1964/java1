@@ -1,5 +1,7 @@
 package ru.progwards.java1.lessons.datetime;
 
+import com.sun.source.tree.IfTree;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -82,6 +84,8 @@ public class Insurance {
 //  проверить действительна ли страховка на указанную дату-время
     public boolean checkValid(ZonedDateTime dateTime){
         //System.out.println();
+        if (this.start.compareTo(dateTime) > 0 )    //  начало еще не наступило
+            return false;
         if (this.duration == null)
             return true;
         //System.out.println(this.start);
@@ -93,24 +97,24 @@ public class Insurance {
         return false;
     }
     public static void main(String[] args) {
-        Insurance str1 = new Insurance("2020-02-29T10:15:30+01:00[Europe/Paris]", FULL);
-        Insurance str2 = new Insurance("2020-02-29T10:10:43.9316671+03:00[Europe/Moscow]", FULL);
-        Insurance str3 = new Insurance("2020-02-29T10:10:43", LONG);
-        Insurance str4 = new Insurance("2020-02-29", SHORT);
+//        Insurance str1 = new Insurance("2020-02-29T10:15:30+01:00[Europe/Paris]", FULL);
+//        Insurance str2 = new Insurance("2020-02-29T10:10:43.9316671+03:00[Europe/Moscow]", FULL);
+        Insurance str3 = new Insurance("2020-04-01T10:00:00", LONG);
+//        Insurance str4 = new Insurance("2020-02-29", SHORT);
 
-        str1.setDuration(1,0,0);
-        str2.setDuration(1,15,0);
-        str3.setDuration(Duration.ofHours(750));    //  750 часов
-        str4.setDuration(ZonedDateTime.now());      //  на текущий момент - PT744H32M53
+//        str1.setDuration(1,0,0);
+//        str2.setDuration(1,15,0);
+        str3.setDuration(Duration.ofHours(48));    //  750 часов
+//        str4.setDuration(ZonedDateTime.now());      //  на текущий момент - PT744H32M53
 
 //        System.out.println(str1.checkValid(ZonedDateTime.now()));
 //        System.out.println(str2.checkValid(ZonedDateTime.now()));
 //        System.out.println(str3.checkValid(ZonedDateTime.now()));
 //        System.out.println(str4.checkValid(ZonedDateTime.now()));
-        System.out.println(str1);
-        System.out.println(str2);
+//        System.out.println(str1);
+//        System.out.println(str2);
         System.out.println(str3);
-        System.out.println(str4);
+//        System.out.println(str4);
     }
 }
 //  2019-12-31T08:04:43.9316671+03:00[Europe/Moscow]
