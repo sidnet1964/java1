@@ -59,7 +59,7 @@ public class Insurance {
         if (checkValid(ZonedDateTime.now()))
             return "Insurance issued on " + start + " is valid";
         else
-            return "Insurance issued on " + start + "  is not valid";
+            return "Insurance issued on " + start + " is not valid";
     }
 
     public static enum FormatStyle {SHORT, LONG, FULL};
