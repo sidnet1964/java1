@@ -15,8 +15,9 @@ class UserSession {
         this.userName = userName;
         this.lastAccess = Instant.now();
 //          Внутри автоматически сгенерировать sessionHanle
-        final Random random = new Random(Instant.now().getEpochSecond());
+        final Random random = new Random(Instant.now().toEpochMilli());
         this.sessionHandle = random.nextInt();
+//        System.out.println("Super - " + userName + " = " + this.sessionHandle);
     }
 
     //  обновляет время доступа к сессии

@@ -112,16 +112,18 @@ public class SessionManager {
 //            Thread.sleep(1000);
 //        }
 
-        UserSession uss_1 = smm1.find("sidnet");
-        if (uss_1 == null) {
-            uss_1 = new UserSession("sidnet");
-            //System.out.println("P0 -> " + uss_1);
-            smm1.add(uss_1);
-        }
-        Thread.sleep(1100);
+//        UserSession uss_1 = smm1.find("sidnet");
+//        if (uss_1 == null) {
+//            uss_1 = new UserSession("sidnet");
+//            //System.out.println("P0 -> " + uss_1);
+//            smm1.add(uss_1);
+//        }
+        smm1.add(new UserSession("sidnet"));
+        Thread.sleep(500);
+        smm1.add(new UserSession("sidyul"));
 //  4. Проверить что сессии нет через метод get
 //  Вызвать несколько раз get
-        System.out.println("P4 - д/б null -> " + smm1.get(uss_1.getSessionHandle()));
+//        System.out.println("P4 - д/б null -> " + smm1.get(uss_1.getSessionHandle()));
 
 //        smm1.get(uss_1.getSessionHandle());
 //        smm1.get(uss_1.getSessionHandle());
