@@ -9,21 +9,20 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-//  вариант с одним TreeMap - sessionsIn
-public class SessionManager {
+public class SessionManager2 {
     private int sessionValid;   //  период валидности сессии в секундах
     private Map<Integer, UserSession> sessionsIn;   //  ключ - int sessionHandle;
-//    private Map<String, UserSession> sessionsSt;    //  ключ - String userName;
+    private Map<String, UserSession> sessionsSt;    //  ключ - String userName;
 //  конструктор
-    public SessionManager(int sessionValid){
+    public SessionManager2(int sessionValid){
         this.sessionValid = sessionValid;
         this.sessionsIn = new TreeMap<>();
-//        this.sessionsSt = new TreeMap<>();
+        this.sessionsSt = new TreeMap<>();
     }
 //  добавляет новую сессию пользователя (в коллекцию)
     public void add(UserSession userSession){
         sessionsIn.put(userSession.sessionHandle, userSession);
-//        sessionsSt.put(userSession.userName, userSession);
+        sessionsSt.put(userSession.userName, userSession);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss:S");
         System.out.println("void add - " + dtf.format(userSession.lastAccess));
     }
@@ -32,23 +31,24 @@ public class SessionManager {
 //  Если срок валидности истек, или такой сессии нет, возвращает null.
 //  В противном случае возвращает сессию, обновив ее дату доступа.
     public UserSession find(String userName){   //  find    find    find    find    find    find    find    find
-        //  вариант с одним TreeMap - sessionsIn, userName ищется перебором
         System.out.print("US find - " + userName);
-        Collection<UserSession> collection = sessionsIn.values();
-        var iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            UserSession userSession = iterator.next();    //  объект на ПРОВЕРКУ
-            if (userSession.getUserName().equals(userName)) {    //  объект обнаружен
-                if (checkExpired(userSession))
-                    return null;
-                else {
-                    System.out.println("US find + " + userSession.getUserName());
-                    userSession.updateLastAccess();
-                    return userSession;
-                }
+        if  (! sessionsSt.containsKey(userName)) {
+            System.out.println(" = null");
+            return null;    //  нет такой сессии
+        }
+        else {
+            UserSession curSes = sessionsSt.get(userName);
+            System.out.println(" = " + curSes.sessionHandle);
+            ZonedDateTime zdt = ZonedDateTime.now();
+            Duration dur = Duration.between(curSes.lastAccess, zdt);    //  промежуток с последнего обращения
+            int seconds = (int)dur.toSeconds(); //  возвращается long и усекается
+            if (this.sessionValid < seconds)
+                return null;    //  время истекло
+            else {
+                curSes.updateLastAccess();
+                return curSes;
             }
         }
-        return null;    //  цикл завершен, значит не найдено
     }
 //  проверяет наличие существующей сессии по хендлу
 //  Проверка сессии по хендлу должна работать максимально быстро.
@@ -78,15 +78,15 @@ public class SessionManager {
         }
 //  удаляет все сессии с истекшим сроком годности
         public void deleteExpired(){
-            Collection<UserSession> collection = sessionsIn.values();
+            Collection<UserSession> collection = sessionsSt.values();
             var iterator = collection.iterator();
             while (iterator.hasNext()) {
-                UserSession userSession = iterator.next();    //  кандидат на удаление
-                if (checkExpired(userSession)) {
-//                    Integer integerToDel = toDel.sessionHandle;
-                    System.out.println("P90 - " + userSession.userName);
+                UserSession toDel = iterator.next();    //  кандидат на удаление
+                if (checkExpired(toDel)) {
+                    Integer integerToDel = toDel.sessionHandle;
+                    System.out.println("P90 - " + toDel.userName);
                     iterator.remove();
-//                    sessionsIn.remove(integerToDel);
+                    sessionsIn.remove(integerToDel);
                 }
             }
         }
@@ -145,7 +145,7 @@ public class SessionManager {
 //- убедиться что вернется null
 //- создать новую сессию
 //- добавить используя add
-        SessionManager smm1 = new SessionManager(10);
+        SessionManager2 smm1 = new SessionManager2(10);
 //        for (int i = 100; i < 600; i+=100) {                 //  накачка пассивными сессиями
 //            smm1.add(new UserSession(String.valueOf(i)));
 //            Thread.sleep(1000);
@@ -165,7 +165,7 @@ public class SessionManager {
 //  Подождать (Thread.sleep) время, большее, чем время валидности
         Thread.sleep(11000);
 //  4. Проверить что сессии нет через метод get
-        System.out.println("P4 - д/б null -> " + smm1.get(uss_1.sessionHandle));
+        System.out.println("P4 " + smm1.get(uss_1.sessionHandle));
 //  5. Создать еще одну сессию
         UserSession uss_2 = smm1.find("sidnet");
         if (uss_2 == null) {
@@ -175,7 +175,7 @@ public class SessionManager {
         }
 //  6. Подождать половину времени валидности сессии
         Thread.sleep(5000);
-        System.out.println("P6 " + smm1.sessionsIn.size());
+        System.out.println("P6 " + smm1.sessionsSt.size());
 //  7. Создать еще одну сессию
         UserSession uss_3 = smm1.find("sidnet");
         if (uss_3 == null) {
@@ -185,9 +185,10 @@ public class SessionManager {
         }
 //  8. Подождать еще раз половину времени валидности сессии
         Thread.sleep(5000);
-        System.out.println("P8 " + smm1.sessionsIn.size());
+        System.out.println("P8 " + smm1.sessionsSt.size());
 //  9. Вызвать deleteExpired()
         smm1.deleteExpired();
+        System.out.println("P91 = " + smm1.sessionsSt.size());
         System.out.println("P92 = " + smm1.sessionsIn.size());
 //Убедиться, что одна сессия удалена, вторая нет
 //
