@@ -1,19 +1,19 @@
 package ru.progwards.java1.lessons.datetime;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Random;
 
 class UserSession {
     //  ----------------------------------------------
     private int sessionHandle;
     private String userName;
-    private ZonedDateTime lastAccess;
+//    private ZonedDateTime lastAccess;
+    private Instant lastAccess;
 
     //  конструктор
     public UserSession(String userName) {
         this.userName = userName;
-        this.lastAccess = ZonedDateTime.now();
+        this.lastAccess = Instant.now();
 //          Внутри автоматически сгенерировать sessionHanle
         final Random random = new Random(Instant.now().getEpochSecond());
         this.sessionHandle = random.nextInt();
@@ -21,7 +21,7 @@ class UserSession {
 
     //  обновляет время доступа к сессии
     void updateLastAccess() {
-        this.lastAccess = ZonedDateTime.now();
+        this.lastAccess = Instant.now();
     }
 
     public int getSessionHandle() {
@@ -32,7 +32,7 @@ class UserSession {
         return userName;
     }
 
-    public ZonedDateTime getLastAccess() {
+    public Instant getLastAccess() {
         return lastAccess;
     }
 
