@@ -22,10 +22,10 @@ public class SessionManager {
     }
 //  добавляет новую сессию пользователя (в коллекцию)
     public void add(UserSession userSession){
-        sessionsIn.put(userSession.sessionHandle, userSession);
+        sessionsIn.put(userSession.getSessionHandle(), userSession);
 //        sessionsSt.put(userSession.userName, userSession);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss:S");
-        System.out.println("void add - " + dtf.format(userSession.lastAccess));
+        System.out.println("void add - " + dtf.format(userSession.getLastAccess()));
     }
 
 //  проверяет наличие существующей сессии по userName
@@ -60,9 +60,9 @@ public class SessionManager {
         }
         else {
             UserSession curSes = sessionsIn.get(sessionHandle);
-            System.out.println(" = " + curSes.userName);
+            System.out.println(" = " + curSes.getUserName());
             ZonedDateTime zdt = ZonedDateTime.now();
-            Duration dur = Duration.between(curSes.lastAccess, zdt);
+            Duration dur = Duration.between(curSes.getLastAccess(), zdt);
             int seconds = (int)dur.toSeconds();      //  toSecondsPart();
             if (this.sessionValid < seconds)
                 return null;    //  время истекло
@@ -84,7 +84,7 @@ public class SessionManager {
                 UserSession userSession = iterator.next();    //  кандидат на удаление
                 if (checkExpired(userSession)) {
 //                    Integer integerToDel = toDel.sessionHandle;
-                    System.out.println("P90 - " + userSession.userName);
+//                    System.out.println("P90 - " + userSession.userName);
                     iterator.remove();
 //                    sessionsIn.remove(integerToDel);
                 }
@@ -99,44 +99,6 @@ public class SessionManager {
             else
                 return false;
 
-        }
-    //  ----------------------------------------------
-        static class UserSession{
-        private int sessionHandle;
-        private String userName;
-        private ZonedDateTime lastAccess;
-//  конструктор
-        public UserSession(String userName){
-            this.userName = userName;
-            this.lastAccess = ZonedDateTime.now();
-//          Внутри автоматически сгенерировать sessionHanle
-            final Random random = new Random(Instant.now().getEpochSecond());
-            this.sessionHandle = random.nextInt();
-        }
-//  обновляет время доступа к сессии
-        void updateLastAccess(){
-            this.lastAccess = ZonedDateTime.now();
-        }
-        public int getSessionHandle() {
-            return sessionHandle;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        public ZonedDateTime getLastAccess() {
-            return lastAccess;
-        }
-
-            @Override
-            public String toString() {
-                return "UserSession{" +
-                        "sessionHandle=" + sessionHandle +
-                        ", userName='" + userName + '\'' +
-                        ", lastAccess=" + lastAccess +
-                        '}';
-            }
         }
 
     public static void main(String[] args) throws InterruptedException {
@@ -158,14 +120,13 @@ public class SessionManager {
             smm1.add(uss_1);
         }
 //  Вызвать несколько раз get
-        smm1.get(uss_1.sessionHandle);
-        smm1.get(uss_1.sessionHandle);
-        smm1.get(uss_1.sessionHandle);
-        System.out.println(smm1.get(uss_1.sessionHandle));
+        smm1.get(uss_1.getSessionHandle());
+        smm1.get(uss_1.getSessionHandle());
+        System.out.println(smm1.get(uss_1.getSessionHandle()));
 //  Подождать (Thread.sleep) время, большее, чем время валидности
         Thread.sleep(11000);
 //  4. Проверить что сессии нет через метод get
-        System.out.println("P4 - д/б null -> " + smm1.get(uss_1.sessionHandle));
+        System.out.println("P4 - д/б null -> " + smm1.get(uss_1.getSessionHandle()));
 //  5. Создать еще одну сессию
         UserSession uss_2 = smm1.find("sidnet");
         if (uss_2 == null) {
