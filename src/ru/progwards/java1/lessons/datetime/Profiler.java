@@ -23,15 +23,17 @@ public class Profiler {
 //  ---------------------------------------------------------------------
 //  войти в профилировочную секцию, замерить время входа
     public static void enterSection(String name){
+        Statistic statistic;
         long instantIn = Instant.now().toEpochMilli();  //  засечь время - старт
         System.out.println("enter ++++++ -> " + name + " | " + instantIn);
-//        Statistic statistic = new Statistic(name, instantIn);   //  новый набор значений времени выполнения
         //  получается, что один объект добавляем в разные коллекции - TreeMap и ArrayDeque
-        Statistic statistic = sectionStat.get(name);
-        if (statistic == null) {
+        if ( sectionStat.containsKey(name))
+            statistic = sectionStat.get(name);
+        else
+//        if (statistic == null) {
             statistic = new Statistic(name);   //  новый набор значений времени выполнения
             sectionStat.put(name, statistic);   //  новая секция в TreeMap
-        }
+//        }
         statistic.init(instantIn);
         stackLong.push(instantIn);
         stackString.push(name);     //  записать в стек имя секции - кандидат на выживание
