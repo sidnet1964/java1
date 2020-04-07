@@ -22,7 +22,7 @@ public class Profiler {
     }
 //  ---------------------------------------------------------------------
 //  войти в профилировочную секцию, замерить время входа
-    public static void enterSection(String name) throws InterruptedException {
+    public static void enterSection(String name){
         long instantIn = Instant.now().toEpochMilli();  //  засечь время - старт
         System.out.println("enter ++++++ -> " + name + " | " + instantIn);
 //        Statistic statistic = new Statistic(name, instantIn);   //  новый набор значений времени выполнения
@@ -37,7 +37,7 @@ public class Profiler {
         stackString.push(name);     //  записать в стек имя секции - кандидат на выживание
 //        stackStat.push(statistic);  //  записать в стек блок статистики
 
-        Thread.sleep(50);
+//        Thread.sleep(50);
     }
 //  ---------------------------------------------------------------------
 //   выйти из профилировочной секции. Замерить время выхода, вычислить
@@ -82,12 +82,18 @@ public class Profiler {
         return info;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         final int M_COUNT = 2;
         Profiler t1 = new Profiler();
 //        enterSection("1");
         enterSection("1");
         for(int i = 0; i < M_COUNT; i++) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             t1.enterSection("2");
             t1.enterSection("3");
             t1.exitSection("3");
