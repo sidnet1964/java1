@@ -5,28 +5,23 @@ import java.util.*;
 
 public class Profiler {
 //    private static StackCalc stackCalc;
-    public static Deque<Long> stackLong;        //  старый стек - для времени
     public static Deque<String> stackString;    //  новый стек - для секции
-//    public static Deque<Statistic> stackStat;    //  новый стек - для секции
     public static List<StatisticInfo> info;
-    public static Map<String, Long> sectionLong;            //  дополнительно для оперативной работы
     public static Map<String, Statistic> sectionStat;       //  дополнительно для оперативной работы
 
     Profiler(){     //  конструктор
-        stackLong = new ArrayDeque<>();
         stackString = new ArrayDeque<>();
-//        stackStat = new ArrayDeque<>();
         info = new ArrayList<>();
-        sectionLong = new TreeMap<>();
         sectionStat = new TreeMap<>();  //  решение через объект Statistic
     }
 //  ---------------------------------------------------------------------
 //  войти в профилировочную секцию, замерить время входа
     public static void enterSection(String name){
+        if (name == null)
+            return;
         Statistic statistic;
         long instantIn = Instant.now().toEpochMilli();  //  засечь время - старт
         System.out.println("enter ++++++ -> " + name + " | " + instantIn);
-        //  получается, что один объект добавляем в разные коллекции - TreeMap и ArrayDeque
         if ( sectionStat.containsKey(name))
             statistic = sectionStat.get(name);
         else
@@ -35,7 +30,6 @@ public class Profiler {
             sectionStat.put(name, statistic);   //  новая секция в TreeMap
 //        }
         statistic.init(instantIn);
-        stackLong.push(instantIn);
         stackString.push(name);     //  записать в стек имя секции - кандидат на выживание
 //        stackStat.push(statistic);  //  записать в стек блок статистики
 
@@ -45,6 +39,8 @@ public class Profiler {
 //   выйти из профилировочной секции. Замерить время выхода, вычислить
 //   промежуток времени между входом и выходом в миллисекундах.
     public static void exitSection(String name){
+        if (name == null)
+            return;
         long instantOut = Instant.now().toEpochMilli();   //  засечь время - финиш
         System.out.println("exit ------- -> " + name + " | " + instantOut);
         if (!stackString.isEmpty()){
@@ -66,16 +62,7 @@ public class Profiler {
 //                System.out.println("5 stat0 - " + stat0);
             }
         }
-
-        //        Long instantIn = stackLong.peek();    //  прочитать
-        Long instantIn = stackLong.pop();       //  удалить
-        Long prev = sectionLong.get(name);  //  предыдущее значение времени выполнения
         System.out.println("sectionStat.size() = " + sectionStat.size());
-//        System.out.println(stackString);
-        if (prev == null)
-            sectionLong.put(name, instantOut - instantIn);
-        else
-            sectionLong.replace(name, prev + instantOut - instantIn);   //  обновить значение
     }
 //  ---------------------------------------------------------------------
 //  получить профилировочную статистику, отсортировать по наименованию секции
@@ -87,8 +74,7 @@ public class Profiler {
     public static void main(String[] args) {
         final int M_COUNT = 2;
         Profiler t1 = new Profiler();
-//        enterSection("1");
-        enterSection("1");
+        enterSection(null);
         for(int i = 0; i < M_COUNT; i++) {
             try {
                 Thread.sleep(50);
@@ -104,8 +90,6 @@ public class Profiler {
         t1.enterSection("4");
         t1.exitSection("4");
         t1.exitSection("1");
-        System.out.println(t1.sectionLong);
-        System.out.println(t1.stackLong);
         System.out.println(t1.sectionStat);
 //        System.out.println(t1.stackString);
 //        System.out.println(t1.stackStat);
