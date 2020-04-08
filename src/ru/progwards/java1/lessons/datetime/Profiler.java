@@ -22,17 +22,19 @@ public class Profiler {
             Statistic statistic;
             long instantIn = Instant.now().toEpochMilli();  //  засечь время - старт
             System.out.println("enter ++++++ -> " + name + " | " + instantIn);
-            if (sectionStat.containsKey(name))
-                statistic = sectionStat.get(name);
-            else
-//        if (statistic == null) {
-                statistic = new Statistic(name);   //  новый набор значений времени выполнения
-            sectionStat.put(name, statistic);   //  новая секция в TreeMap
-//        }
-            statistic.init(instantIn);
-            stackString.push(name);     //  записать в стек имя секции - кандидат на выживание
+            try {
+                if (sectionStat.containsKey(name))
+                    statistic = sectionStat.get(name);
+                else
+                    statistic = new Statistic(name);   //  новый набор значений времени выполнения
+
+                sectionStat.put(name, statistic);   //  новая секция в TreeMap
+                statistic.init(instantIn);
+                stackString.push(name);     //  записать в стек имя секции - кандидат на выживание
+            } catch (NullPointerException e) {
+                throw e;
+            }
         }
-//        Thread.sleep(50);
     }
 //  ---------------------------------------------------------------------
 //   выйти из профилировочной секции. Замерить время выхода, вычислить
@@ -43,6 +45,8 @@ public class Profiler {
         else {
             long instantOut = Instant.now().toEpochMilli();   //  засечь время - финиш
             System.out.println("exit ------- -> " + name + " | " + instantOut);
+            try {
+
             if (!stackString.isEmpty()) {
                 Statistic stat1 = sectionStat.get(name);    //  взять объект из TreeMap
                 String name2 = stackString.pop();  //  взять объект из стека, можно сравнить с name
@@ -61,6 +65,10 @@ public class Profiler {
                     sectionStat.replace(stat0.sectionName, stat0);   //  обновить значение ArrayDeque
 //                System.out.println("5 stat0 - " + stat0);
                 }
+            }
+            }
+            catch (NullPointerException e) {
+                throw e;
             }
         }
         System.out.println("sectionStat.size() = " + sectionStat.size());
