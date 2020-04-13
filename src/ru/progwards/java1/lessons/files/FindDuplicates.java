@@ -45,6 +45,9 @@ public class FindDuplicates {
             }
         }
         System.out.println(index + " - list1 = " + list1);
+        if (list1 == null)
+            return myList;
+
         if (list1.size() > 1)
             myList.add(list1);
 
@@ -70,8 +73,10 @@ public class FindDuplicates {
     //  перебор всех файлов и формирование списка
     public static List<OneFile> createList(String startPath) throws IOException {
         final String pattern = "glob:**/*";
-        PathMatcher pathMatcher = FileSystems. getDefault().getPathMatcher( pattern);
         List<OneFile> fList = new ArrayList<>();
+        if (startPath == null)
+            return fList;
+        PathMatcher pathMatcher = FileSystems. getDefault().getPathMatcher( pattern);
         Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
@@ -79,7 +84,6 @@ public class FindDuplicates {
                     String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
                     String size = Files.getAttribute(path, "basic:size").toString();
                     fList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size,null));
-//                    System.out.println(path);
                 }
                 return FileVisitResult. CONTINUE;
             }
@@ -93,6 +97,6 @@ public class FindDuplicates {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));
+        System.out.println(findDuplicates(null));   //  "C:/Projects/Academy/Java1"
     }
 }
