@@ -12,7 +12,6 @@ import java.util.List;
 public class FindDuplicates {
     public static List<List<String>> findDuplicates(String startPath) throws IOException {
         List<List<String>> myList = new ArrayList<>();
-//        List<List<String>> myList = new ArrayList<List<String>>();
         List<OneFile> fList = createList(startPath);    //  получить список всех файлов с атрибутами
         OneFile groupObj = null;
         boolean first = true;   //  указатель первого элемента
@@ -63,9 +62,13 @@ public class FindDuplicates {
     //  ---------------------------------------------
     //  сравнить содержимое двух файлов
     static String extractCont(OneFile xObj) throws IOException {
-        Path path = Paths.get(xObj.path+"\\"+xObj.name);
-        String fileAsString = Files.readString(path);
-//        System.out.println(fileAsString);
+        String fileAsString = "";
+        try {
+            Path path = Paths.get(xObj.path+"\\"+xObj.name);
+            fileAsString = Files.readString(path);
+        } catch (IOException e){
+            throw e;
+        }
         return fileAsString;
     }
 
@@ -76,27 +79,34 @@ public class FindDuplicates {
         List<OneFile> fList = new ArrayList<>();
         if (startPath == null)
             return fList;
-        PathMatcher pathMatcher = FileSystems. getDefault().getPathMatcher( pattern);
-        Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                if (pathMatcher .matches(path)) {
-                    String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
-                    String size = Files.getAttribute(path, "basic:size").toString();
-                    fList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size,null));
+        try {
+
+            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pattern);
+            Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                    if (pathMatcher.matches(path)) {
+                        String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
+                        String size = Files.getAttribute(path, "basic:size").toString();
+                        fList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
+                    }
+                    return FileVisitResult.CONTINUE;
                 }
-                return FileVisitResult. CONTINUE;
-            }
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException e) {
-                return FileVisitResult. CONTINUE;
-            }
-        });
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException e) {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e){
+            throw e;
+        }
+
         fList.sort(null);
         return fList;
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(findDuplicates(null));   //  "C:/Projects/Academy/Java1"
+        System.out.println(findDuplicates("C:/Projects/Academy/Java2"));   //  "C:/Projects/Academy/Java1"
     }
 }
