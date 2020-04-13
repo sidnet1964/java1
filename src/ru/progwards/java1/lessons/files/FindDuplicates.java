@@ -21,7 +21,7 @@ public class FindDuplicates {
         while (iterator.hasNext()) {
             index++;
             OneFile itObj = iterator.next();
-            System.out.println(index + " - значение = " + itObj);
+//            System.out.println(index + " - значение = " + itObj);
             if (first) {
                 groupObj = itObj; //  запомнить первый элемент
                 first = false;  //  больше этого не повтрится
@@ -34,7 +34,7 @@ public class FindDuplicates {
                         list1.add(itObj.path + "\\" + itObj.name);
                 }
                 else {
-                        System.out.println(index + " - list1 = " + list1);
+//                        System.out.println(index + " - list1 = " + list1);
                         if (list1.size() > 1)
                             myList.add(list1);
                         groupObj = itObj; //  запомнить новый элемент
@@ -43,7 +43,7 @@ public class FindDuplicates {
                     }
             }
         }
-        System.out.println(index + " - list1 = " + list1);
+//        System.out.println(index + " - list1 = " + list1);
         if (list1 == null)
             return myList;
 
@@ -107,6 +107,6 @@ public class FindDuplicates {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(findDuplicates("C:/Projects/Academy/Java2"));   //  "C:/Projects/Academy/Java1"
+        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));   //  "C:/Projects/Academy/Java1"
     }
 }
