@@ -11,9 +11,15 @@ import java.util.List;
 //  (и расширению), дате-времени последнего изменения, размеру и по содержимому.
 public class FindDuplicates {
     public static List<List<String>> findDuplicates(String startPath) throws IOException {
+        List<OneFile> fList;
         List<List<String>> myList = new ArrayList<>();
-        List<OneFile> fList = createList(startPath);    //  получить список всех файлов с атрибутами
-        OneFile groupObj = null;
+        try {
+            fList = createList(startPath);    //  получить список всех файлов с атрибутами
+        } catch (IOException e) {
+            throw e;
+        }
+
+    OneFile groupObj = null;
         boolean first = true;   //  указатель первого элемента
         List<String> list1 = null;
         int index = 0;
@@ -60,7 +66,7 @@ public class FindDuplicates {
         return text1.equals(text2);
     }
     //  ---------------------------------------------
-    //  сравнить содержимое двух файлов
+    //  извлечь содержимое файла
     static String extractCont(OneFile xObj) throws IOException {
         String fileAsString = "";
         try {

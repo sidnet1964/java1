@@ -23,7 +23,7 @@ public class OneFile implements Comparable<OneFile>{
         return "OneFile{" +
                 "name='" + name + '\'' +
                 ", path='" + path + '\'' +
-                ", last='" + last + '\'' +
+//                ", last='" + last + '\'' +
                 ", size='" + size + '\'' +
                 '}';
     }
