@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//  Реализовать метод, который сортирует файлы по их содержимому.
 public class FilesSelect {
     public static void selectFiles(String inFolder, String outFolder, List<String> keys) throws IOException {
         List<Path> fList;
