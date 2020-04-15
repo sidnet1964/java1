@@ -11,7 +11,7 @@ import java.util.*;
 public class OrderProcessor {
     public String startPath;    //  начальная папка для хранения файлов
     public List<Order> listO;
-    public static double sumOrder;
+    public static double sumOrder;  //  для временного суммирования по одной накладной
 
     public OrderProcessor(String startPath) {   //  конструктор
         this.startPath = startPath;
@@ -43,7 +43,7 @@ public class OrderProcessor {
             LocalDate lastDate = checkLastDate(last.substring(0, 10));
             LocalDateTime lastTime = checkLastTime(last.substring(0, 10)+" "+last.substring(11, 19));
             if (checkOrders(start, finish, lastDate)) {
-                System.out.println(file + " + " + last);
+//                System.out.println(file + " + " + last);
                 sumOrder = 0d;   //  сумма товаров по текущему заказу
                 //  загружаем текущий файл
                 List<OrderItem> oList = orderItem(file);
@@ -54,8 +54,8 @@ public class OrderProcessor {
                 listO.add(new Order(shop, orde, cust, lastTime, oList, sumOrder));
             }
         }
-        System.out.println("listO.size() = " + listO.size());
-        System.out.println(listO);
+//        System.out.println("listO.size() = " + listO.size());
+//        System.out.println(listO);
         return count;
     }
     //  -----------------------------------
@@ -83,7 +83,7 @@ public class OrderProcessor {
                 good = false;
                 break;
             }
-            System.out.println(googsName + " / " + count + " / " + price);
+//            System.out.println(googsName + " / " + count + " / " + price);
             oList.add(new OrderItem(googsName, count, price));
             sumOrder += count * price;
         }
@@ -133,10 +133,32 @@ public class OrderProcessor {
         });
         return fList;
     }
+//  выдать список заказов в порядке обработки (отсортированные по дате-времени),
+//  для заданного магазина. Если shopId == null, то для всех
+    public List<Order> process(String shopId){
+        //  1 - отбор, 2 - сортировка
+        //  компаратор для сортировки
+        List<Order> processList = new ArrayList<>();
+        if (shopId == null)
+            processList.addAll(listO);
+        else
+            listO.forEach(orders -> {
+            if (orders.shopId.equals(shopId))
+                processList.add(orders);
+//                System.out.println(orders);
+            });
+        //  работают оба варианта
+        processList.sort((a,b)->a.getDatetime().compareTo(b.getDatetime()));
+//        Collections.sort(processList, (a,b)->a.getDatetime().compareTo(b.getDatetime()));
+//        System.out.println(processList);
+        return processList;
+    }
     public static void main(String[] args) throws IOException {
         OrderProcessor ord1 = new OrderProcessor("C:/Projects/Academy/Java1");
         LocalDate data1 = LocalDate.of(2020, 4, 13);
         LocalDate data2 = LocalDate.of(2020, 4, 19);
-        ord1.loadOrders(data1, data2, null);
+        ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
+        //  результат поместить в List<Order> listO, содержащий List<OrderItem> items и double sum
+        System.out.println(ord1.process("117"));
     }
 }

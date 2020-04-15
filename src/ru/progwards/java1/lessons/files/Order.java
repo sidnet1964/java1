@@ -31,4 +31,12 @@ public class Order {
                 ", sum=" + sum +
                 '}';
     }
+
+    public LocalDateTime getDatetime() {
+        return datetime;
+    }
+
+//    public void setDatetime(LocalDateTime datetime) {
+//        this.datetime = datetime;
+//    }
 }
