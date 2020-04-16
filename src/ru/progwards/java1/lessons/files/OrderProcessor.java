@@ -7,15 +7,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OrderProcessor {
     public String startPath;    //  начальная папка для хранения файлов
-    public List<Order> listO;
+    public List<Order> listOrder;
     public static double sumOrder;  //  для временного суммирования по одной накладной
 
     public OrderProcessor(String startPath) {   //  конструктор
         this.startPath = startPath;
-        listO = new ArrayList<>();
+        listOrder = new ArrayList<>();
     }
 
     //  загружает заказы за указанный диапазон дат, с start до finish, обе даты включительно
@@ -36,14 +37,12 @@ public class OrderProcessor {
             String shop = name.substring(0,3);
             String orde = name.substring(4,10);
             String cust = name.substring(11,15);
-//            System.out.println(Files.getAttribute(file, "basic:lastModifiedTime").toString());
             String last = Files.getAttribute(file, "basic:lastModifiedTime").toString();
             //  2020-04-12T14:41:06
             //  0123456789012345678
             LocalDate lastDate = checkLastDate(last.substring(0, 10));
             LocalDateTime lastTime = checkLastTime(last.substring(0, 10)+" "+last.substring(11, 19));
             if (checkOrders(start, finish, lastDate)) {
-//                System.out.println(file + " + " + last);
                 sumOrder = 0d;   //  сумма товаров по текущему заказу
                 //  загружаем текущий файл
                 List<OrderItem> oList = orderItem(file);
@@ -51,11 +50,11 @@ public class OrderProcessor {
                     count++;
                     continue;
                 }
-                listO.add(new Order(shop, orde, cust, lastTime, oList, sumOrder));
+                listOrder.add(new Order(shop, orde, cust, lastTime, oList, sumOrder));
             }
         }
-//        System.out.println("listO.size() = " + listO.size());
-//        System.out.println(listO);
+//        System.out.println("listOrder.size() = " + listOrder.size());
+//        System.out.println(listOrder);
         return count;
     }
     //  -----------------------------------
@@ -140,9 +139,9 @@ public class OrderProcessor {
         //  компаратор для сортировки
         List<Order> processList = new ArrayList<>();
         if (shopId == null)
-            processList.addAll(listO);
+            processList.addAll(listOrder);
         else
-            listO.forEach(orders -> {
+            listOrder.forEach(orders -> {
             if (orders.shopId.equals(shopId))
                 processList.add(orders);
 //                System.out.println(orders);
@@ -153,12 +152,30 @@ public class OrderProcessor {
 //        System.out.println(processList);
         return processList;
     }
+    //  выдать информацию по объему продаж по магазинам (отсортированную по ключам)
+    public Map<String, Double> statisticsByShop(){
+        Map<String, Double> mapByShop =
+                listOrder.stream().collect(Collectors.groupingBy(Order::getShopId, Collectors.summingDouble(Order::getSum)));
+//        System.out.println(mapByShop);
+        return mapByShop;
+    }
+    //   - выдать информацию по объему продаж по товарам (отсортированную по ключам)
+    public Map<String, Double> statisticsByGoods(){
+
+    return null;
+    }
+    //  выдать информацию по объему продаж по дням (отсортированную по ключам)
+    public Map<LocalDate, Double> statisticsByDay(){
+
+    return null;
+    }
     public static void main(String[] args) throws IOException {
         OrderProcessor ord1 = new OrderProcessor("C:/Projects/Academy/Java1");
         LocalDate data1 = LocalDate.of(2020, 4, 13);
         LocalDate data2 = LocalDate.of(2020, 4, 19);
         ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
-        //  результат поместить в List<Order> listO, содержащий List<OrderItem> items и double sum
-        System.out.println(ord1.process("117"));
+        //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
+//        System.out.println(ord1.process("117"));
+        System.out.println(ord1.statisticsByShop());
     }
 }

@@ -36,7 +36,20 @@ public class Order {
         return datetime;
     }
 
-//    public void setDatetime(LocalDateTime datetime) {
-//        this.datetime = datetime;
-//    }
+    public String getShopId() {
+        return shopId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
 }
