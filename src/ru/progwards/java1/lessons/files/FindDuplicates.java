@@ -20,33 +20,31 @@ public class FindDuplicates {
         List<List<String>> myList = new ArrayList<>();
         fileList = createList(startPath);    //  получить
 
+        OneFile itObj;              //  текущий элемент
         OneFile groupObj = null;    //  первый объект для группировки
         boolean first = true;       //  указатель первого элемента
-        List<String> list1 = null;
+        List<String> list1 = null;  //  список
         int index = 0;
-        Iterator<OneFile> iterator = fileList.iterator();
-        while (iterator.hasNext()) {
+        for (OneFile oneFile : fileList) {
             index++;
-            OneFile itObj = iterator.next();
+            itObj = oneFile;
 //            System.out.println(index + " - значение = " + itObj);
             if (first) {
                 groupObj = itObj; //  запомнить первый элемент
                 first = false;  //  больше этого не повтрится
                 list1 = new ArrayList<>();  //  пустой список
-                list1.add(groupObj.path + "\\" + groupObj.name);
-            }
-            else {
+                list1.add(Paths.get(startPath).relativize(groupObj.filename).toString());
+            } else {
                 if (itObj.compareTo(groupObj) == 0) { //  если ключи равны - проверить содержимое
                     if (compareCont(itObj, groupObj))
-                        list1.add(itObj.path + "\\" + itObj.name);
+                        list1.add(Paths.get(startPath).relativize(itObj.filename).toString());
+                } else {
+                    if (list1.size() > 1)
+                        myList.add(list1);
+                    groupObj = itObj; //  запомнить новый элемент
+                    list1 = new ArrayList<>();
+                    list1.add(Paths.get(startPath).relativize(groupObj.filename).toString());
                 }
-                else {
-                        if (list1.size() > 1)
-                            myList.add(list1);
-                        groupObj = itObj; //  запомнить новый элемент
-                        list1 = new ArrayList<>();
-                        list1.add(groupObj.path + "\\" + groupObj.name);
-                    }
             }
         }
         if (list1 == null)
@@ -69,7 +67,7 @@ public class FindDuplicates {
     static String extractCont(OneFile xObj) {
         String fileAsString = "";
         try {
-            Path path = Paths.get(xObj.path+"\\"+xObj.name);
+            Path path = Paths.get(xObj.filename.toString());    /// ПРОВЕРИТЬ
             fileAsString = Files.readString(path);
         } catch (IOException e){
             System.out.println(e);
@@ -93,7 +91,8 @@ public class FindDuplicates {
                     if (pathMatcher.matches(path)) {
                         String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
                         String size = Files.getAttribute(path, "basic:size").toString();
-                        fileList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
+//                        fileList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
+                        fileList.add(new OneFile(path, last, size, null));
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -115,10 +114,10 @@ public class FindDuplicates {
     //  но и структуре класса никаких требовний нет. Пока статический вариант 
     public static void main(String[] args) {
         //  1 - вызов с реально существующим путем
-//        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));
+        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));
         //  2 - вызов с НЕ существующим путем
 //        System.out.println(findDuplicates("C:/Projects/Academy/Java2"));
         //  3 - вызов с null
-        System.out.println(findDuplicates(null));
+//        System.out.println(findDuplicates(null));
     }
 }
