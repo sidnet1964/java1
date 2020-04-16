@@ -10,20 +10,21 @@ import java.util.List;
 //  В заданном каталоге и его подкаталогах найти файлы, точно совпадающие по названию
 //  (и расширению), дате-времени последнего изменения, размеру и по содержимому.
 public class FindDuplicates {
-    public static List<List<String>> findDuplicates(String startPath) throws IOException {
-        List<OneFile> fList;
-        List<List<String>> myList = new ArrayList<>();
-        try {
-            fList = createList(startPath);    //  получить список всех файлов с атрибутами
-        } catch (IOException e) {
-            throw e;
-        }
+    //  конструктор по умолчанию
+    public FindDuplicates() {
+    }
 
-    OneFile groupObj = null;
-        boolean first = true;   //  указатель первого элемента
+    //  НЕ конструктор
+    public static List<List<String>> findDuplicates(String startPath) {
+        List<OneFile> fileList;     //  список всех файлов с атрибутами
+        List<List<String>> myList = new ArrayList<>();
+        fileList = createList(startPath);    //  получить
+
+        OneFile groupObj = null;    //  первый объект для группировки
+        boolean first = true;       //  указатель первого элемента
         List<String> list1 = null;
         int index = 0;
-        Iterator<OneFile> iterator = fList.iterator();
+        Iterator<OneFile> iterator = fileList.iterator();
         while (iterator.hasNext()) {
             index++;
             OneFile itObj = iterator.next();
@@ -40,7 +41,6 @@ public class FindDuplicates {
                         list1.add(itObj.path + "\\" + itObj.name);
                 }
                 else {
-//                        System.out.println(index + " - list1 = " + list1);
                         if (list1.size() > 1)
                             myList.add(list1);
                         groupObj = itObj; //  запомнить новый элемент
@@ -49,7 +49,6 @@ public class FindDuplicates {
                     }
             }
         }
-//        System.out.println(index + " - list1 = " + list1);
         if (list1 == null)
             return myList;
 
@@ -60,31 +59,31 @@ public class FindDuplicates {
     }
     //  ---------------------------------------------
     //  сравнить содержимое двух файлов
-    static boolean compareCont(OneFile itObj, OneFile groupObj) throws IOException {
+    static boolean compareCont(OneFile itObj, OneFile groupObj) {
         String text1 = extractCont(itObj);
         String text2 = extractCont(groupObj);
         return text1.equals(text2);
     }
     //  ---------------------------------------------
     //  извлечь содержимое файла
-    static String extractCont(OneFile xObj) throws IOException {
+    static String extractCont(OneFile xObj) {
         String fileAsString = "";
         try {
             Path path = Paths.get(xObj.path+"\\"+xObj.name);
             fileAsString = Files.readString(path);
         } catch (IOException e){
-            throw e;
+            System.out.println(e);
         }
         return fileAsString;
     }
 
     //  ---------------------------------------------
     //  перебор всех файлов и формирование списка
-    public static List<OneFile> createList(String startPath) throws IOException {
+    public static List<OneFile> createList(String startPath) {
         final String pattern = "glob:**/*";
-        List<OneFile> fList = new ArrayList<>();
+        List<OneFile> fileList = new ArrayList<>();
         if (startPath == null)
-            return fList;
+            return fileList;
         try {
 
             PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pattern);
@@ -94,7 +93,7 @@ public class FindDuplicates {
                     if (pathMatcher.matches(path)) {
                         String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
                         String size = Files.getAttribute(path, "basic:size").toString();
-                        fList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
+                        fileList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -105,14 +104,21 @@ public class FindDuplicates {
                 }
             });
         } catch (IOException e){
-            throw e;
+            System.out.println(e);
         }
 
-        fList.sort(null);
-        return fList;
+        fileList.sort(null);
+        return fileList;
     }
 
-    public static void main(String[] args) throws IOException {
-        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));   //  "C:/Projects/Academy/Java1"
+    //  в условиях задачи не указано, что findDuplicates - статический метод,
+    //  но и структуре класса никаких требовний нет. Пока статический вариант 
+    public static void main(String[] args) {
+        //  1 - вызов с реально существующим путем
+//        System.out.println(findDuplicates("C:/Projects/Academy/Java1"));
+        //  2 - вызов с НЕ существующим путем
+//        System.out.println(findDuplicates("C:/Projects/Academy/Java2"));
+        //  3 - вызов с null
+        System.out.println(findDuplicates(null));
     }
 }

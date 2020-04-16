@@ -1,10 +1,10 @@
 package ru.progwards.java1.lessons.files;
 
+//import java.io.IOException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -132,8 +132,9 @@ public class OrderProcessor {
         });
         return fList;
     }
-//  выдать список заказов в порядке обработки (отсортированные по дате-времени),
-//  для заданного магазина. Если shopId == null, то для всех
+    //  -----------------------------------
+    //  выдать список заказов в порядке обработки (отсортированные по дате-времени),
+    //  для заданного магазина. Если shopId == null, то для всех
     public List<Order> process(String shopId){
         //  1 - отбор, 2 - сортировка
         //  компаратор для сортировки
@@ -176,6 +177,6 @@ public class OrderProcessor {
         ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
         //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
 //        System.out.println(ord1.process("117"));
-        System.out.println(ord1.statisticsByShop());
+//        System.out.println(ord1.statisticsByShop());
     }
 }
