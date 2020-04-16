@@ -11,6 +11,9 @@ public class Order {
     public List<OrderItem> items;   // - список позиций в заказе, отсортированный по наименованию товара
     public double sum;              // - сумма стоимости всех позиций в заказе
 
+    public Order() {
+    }
+
     public Order(String shopId, String orderId, String customerId, LocalDateTime datetime,
                  List<OrderItem> items, double sum) {   //  конструктор
         this.shopId = shopId;
