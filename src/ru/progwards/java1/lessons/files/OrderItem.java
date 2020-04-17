@@ -14,4 +14,27 @@ public class OrderItem {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "googsName='" + googsName + '\'' +
+                ", count=" + count +
+                ", price=" + price +
+                '}';
+    }
+
+    public String getGoogsName() {
+        return googsName;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+    public double getSumma() {
+        return price * count;
+    }
 }

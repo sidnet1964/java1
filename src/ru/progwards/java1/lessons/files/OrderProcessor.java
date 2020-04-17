@@ -96,10 +96,17 @@ public class OrderProcessor {
     //  -----------------------------------
     //  проверить, удовлетворяет ли файл условиям по дате   2020-04-03 - дата из атрибутов файла
     public boolean checkOrders(LocalDate start, LocalDate finish, LocalDate lastDate){
-//        System.out.println(ld + " ("+start+" = "+finish+")");
-        if (lastDate.compareTo(start) >= 0 && lastDate.compareTo(finish) <= 0)
-            return true;
-        return false;
+        boolean left = false, right = false;
+        System.out.println(lastDate + " ("+start+" = "+finish+")");
+        if (start == null)
+            left = true;
+        else
+            left = (lastDate.compareTo(start) >= 0);
+        if (finish == null)
+            right = true;
+        else
+            right = (lastDate.compareTo(finish) <= 0);
+        return left && right;
     }
     //  -----------------------------------
     //  преобразование строки в дату, 2020-04-03 - дата из атрибутов файла
@@ -167,7 +174,15 @@ public class OrderProcessor {
     }
     //   - выдать информацию по объему продаж по товарам (отсортированную по ключам)
     public Map<String, Double> statisticsByGoods(){
-
+        //  собрать все стороки накладных в единый список
+        List<OrderItem> listOrderItem = new ArrayList<>();
+        for (Order oneOrder : listOrder) {
+            listOrderItem.addAll(oneOrder.items);
+        }
+        System.out.println(listOrderItem);
+        Map<String, Double> mapByGoods =
+                listOrderItem.stream().collect(Collectors.groupingBy(OrderItem::getGoogsName, Collectors.summingDouble(OrderItem::getSumma)));
+//        System.out.println(mapByGoods);
     return null;
     }
     //  выдать информацию по объему продаж по дням (отсортированную по ключам)
@@ -183,5 +198,6 @@ public class OrderProcessor {
         //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
         System.out.println(ord1.process(null));
         System.out.println(ord1.statisticsByShop());
+        System.out.println(ord1.statisticsByGoods());
     }
 }
