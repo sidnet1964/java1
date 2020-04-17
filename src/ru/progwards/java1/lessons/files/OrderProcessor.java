@@ -121,8 +121,8 @@ public class OrderProcessor {
         Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
 
             @Override
-//            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
-            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+//            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                 if (pathMatcher.matches(dir.relativize(path)))
                     fList.add(path);
                 return FileVisitResult.CONTINUE;
