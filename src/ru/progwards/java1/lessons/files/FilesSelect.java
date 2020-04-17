@@ -9,7 +9,7 @@ import java.util.List;
 
 //  Реализовать метод, который сортирует файлы по их содержимому.
 public class FilesSelect {
-    public static void selectFiles(String inFolder, String outFolder, List<String> keys) throws IOException {
+    public static void selectFiles(String inFolder, String outFolder, List<String> keys) {
         List<Path> fList;
         Path dir2 = Paths.get(outFolder);   //  имя каталога назначения
         try {
@@ -35,13 +35,13 @@ public class FilesSelect {
                 }
             }
         } catch (IOException e) {
-            throw e;
+            System.out.println(e);
         }
 //        System.out.println(fList);
     }
     //  ---------------------------------------------
     //  перебор всех файлов и формирование списка
-    public static List<Path> createList(String startPath) throws IOException {
+    public static List<Path> createList(String startPath) {
         final String pattern = "glob:**/*.txt";
         List<Path> fList = new ArrayList<>();
         if (startPath == null)
@@ -67,7 +67,7 @@ public class FilesSelect {
                 }
             });
         } catch (IOException e){
-            throw e;
+            System.out.println(e);
         }
 
 //        fList.sort(null);
@@ -75,18 +75,18 @@ public class FilesSelect {
     }
 //  --------------------------------------------------
 //  извлечь содержимое файла и проверить
-static String extractCont(Path path) throws IOException {
+static String extractCont(Path path) {
     String fileAsString = "";
     try {
         fileAsString = Files.readString(path);
     } catch (IOException e){
-        throw e;
+        System.out.println(e);
     }
     return fileAsString;
 }
 
     //  ==========================================================
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         List<String> keys = new ArrayList<>();
         keys.add("Alpha");
         keys.add("Beta");
