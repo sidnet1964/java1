@@ -1,6 +1,5 @@
 package ru.progwards.java1.lessons.files;
 
-//import java.io.IOException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -176,7 +175,7 @@ public class OrderProcessor {
         LocalDate data2 = LocalDate.of(2020, 4, 19);
         ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
         //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
-//        System.out.println(ord1.process("117"));
-//        System.out.println(ord1.statisticsByShop());
+        System.out.println(ord1.process(null));
+        System.out.println(ord1.statisticsByShop());
     }
 }
