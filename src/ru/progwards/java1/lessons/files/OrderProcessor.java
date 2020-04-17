@@ -119,7 +119,8 @@ public class OrderProcessor {
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pattern);
         Files.walkFileTree(dir, Collections.emptySet(), 2, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+//            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                 if (pathMatcher.matches(dir.relativize(path)))
                     fList.add(path);
                 return FileVisitResult.CONTINUE;
