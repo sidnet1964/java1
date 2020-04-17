@@ -115,13 +115,13 @@ public class OrderProcessor {
     public static List<Path> createList(String startPath, String pattern) throws IOException {
         final Path dir = Paths.get(startPath);
         List<Path> fList = new ArrayList<>();
+        try {
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pattern);
         Files.walkFileTree(dir, Collections.emptySet(), 2, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
                 if (pathMatcher.matches(dir.relativize(path)))
                     fList.add(path);
-//                    System.out.println(path);
                 return FileVisitResult.CONTINUE;
             }
             @Override
@@ -129,6 +129,9 @@ public class OrderProcessor {
                 return FileVisitResult.CONTINUE;
             }
         });
+        } catch (IOException e){
+            System.out.println(e);
+        }
         return fList;
     }
     //  -----------------------------------

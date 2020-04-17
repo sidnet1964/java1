@@ -52,11 +52,7 @@ public class FilesSelect {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                     if (pathMatcher.matches(path)) {
-//                        String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
-//                        String size = Files.getAttribute(path, "basic:size").toString();
                         fList.add(path);
-//                        String text = extractCont(path);
-//                        if (compareCont(text, ))
                     }
                     return FileVisitResult.CONTINUE;
                 }

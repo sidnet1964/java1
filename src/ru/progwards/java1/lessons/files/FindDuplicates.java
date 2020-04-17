@@ -83,7 +83,6 @@ public class FindDuplicates {
         if (startPath == null)
             return fileList;
         try {
-
             PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pattern);
             Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
                 @Override
@@ -91,7 +90,6 @@ public class FindDuplicates {
                     if (pathMatcher.matches(path)) {
                         String last = Files.getAttribute(path, "basic:lastModifiedTime").toString();
                         String size = Files.getAttribute(path, "basic:size").toString();
-//                        fileList.add(new OneFile(path.getFileName().toString(), path.getParent().toString(), last, size, null));
                         fileList.add(new OneFile(path, last, size, null));
                     }
                     return FileVisitResult.CONTINUE;
