@@ -15,10 +15,12 @@ public class FindDuplicates {
     }
 
     //  НЕ конструктор
+    //  В заданном каталоге и его подкаталогах найти файлы, точно совпадающие по названию
+    //  (и расширению), дате-времени последнего изменения, размеру и по содержимому.
     public static List<List<String>> findDuplicates(String startPath) {
         List<OneFile> fileList;     //  список всех файлов с атрибутами
         List<List<String>> myList = new ArrayList<>();
-        fileList = createList(startPath);    //  получить
+        fileList = createList(startPath);    //  получить список всех файлов
 
         OneFile itObj;              //  текущий элемент
         OneFile groupObj = null;    //  первый объект для группировки
@@ -105,6 +107,7 @@ public class FindDuplicates {
         }
 
         fileList.sort(null);
+//        System.out.println("fileList = " + fileList);
         return fileList;
     }
 

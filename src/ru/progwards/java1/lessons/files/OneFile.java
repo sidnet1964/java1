@@ -9,18 +9,13 @@ import java.nio.file.Path;
 public class OneFile implements Comparable<OneFile>{
 //public class OneFile implements Comparable<OneFile>{
     public Path filename;
-//    public String name;
-//    public String path;
     public String last; //  lastModifiedTime    2020-04-11T21:18:52.6062482Z
     public String size; //  размер в строку     40
     public String line; //  первая строка       isDirectory: false
 
 //  конструктор
 public OneFile(Path filename, String last, String size, String line) {
-//    public OneFile(String name, String path, String last, String size, String line) {
     this.filename = filename;
-//        this.name = name;
-//        this.path = path;
         this.last = last;
         this.size = size;
         this.line = line;
@@ -37,8 +32,8 @@ public OneFile(Path filename, String last, String size, String line) {
 
     @Override
     public int compareTo(OneFile file) {
-        String tKey = this.filename.getFileName()+this.last+this.size;
-        String oKey = file.filename.getFileName()+file.last+file.size;
+        String tKey = this.filename.getFileName() + this.last + this.size;
+        String oKey = file.filename.getFileName() + file.last + file.size;
         return tKey.compareTo(oKey);
     }
 }
