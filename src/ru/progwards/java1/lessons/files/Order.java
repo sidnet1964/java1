@@ -1,5 +1,6 @@
 package ru.progwards.java1.lessons.files;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,6 +38,10 @@ public class Order {
 
     public LocalDateTime getDatetime() {
         return datetime;
+    }
+
+    public LocalDate getDate() {
+        return datetime.toLocalDate();
     }
 
     public String getShopId() {

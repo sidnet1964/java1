@@ -97,7 +97,7 @@ public class OrderProcessor {
     //  проверить, удовлетворяет ли файл условиям по дате   2020-04-03 - дата из атрибутов файла
     public boolean checkOrders(LocalDate start, LocalDate finish, LocalDate lastDate){
         boolean left = false, right = false;
-        System.out.println(lastDate + " ("+start+" = "+finish+")");
+//        System.out.println("(01) " + "checkOrders - " + lastDate + " ("+start+" = "+finish+")");
         if (start == null)
             left = true;
         else
@@ -144,7 +144,7 @@ public class OrderProcessor {
         }
         return fList;
     }
-    //  -----------------------------------
+    //  3.5 -----------------------------------
     //  выдать список заказов в порядке обработки (отсортированные по дате-времени),
     //  для заданного магазина. Если shopId == null, то для всех
     public List<Order> process(String shopId){
@@ -165,13 +165,16 @@ public class OrderProcessor {
 //        System.out.println(processList);
         return processList;
     }
+    //  3.6 -----------------------------------
     //  выдать информацию по объему продаж по магазинам (отсортированную по ключам)
     public Map<String, Double> statisticsByShop(){
         Map<String, Double> mapByShop =
-                listOrder.stream().collect(Collectors.groupingBy(Order::getShopId, Collectors.summingDouble(Order::getSum)));
+            listOrder.stream().collect(Collectors.groupingBy(Order::getShopId, Collectors.summingDouble(Order::getSum)));
+        Map<String, Double> mapByShopSort = new TreeMap<>(mapByShop);
 //        System.out.println(mapByShop);
-        return mapByShop;
+        return mapByShopSort;
     }
+    //  3.7 -----------------------------------
     //   - выдать информацию по объему продаж по товарам (отсортированную по ключам)
     public Map<String, Double> statisticsByGoods(){
         //  собрать все стороки накладных в единый список
@@ -179,25 +182,34 @@ public class OrderProcessor {
         for (Order oneOrder : listOrder) {
             listOrderItem.addAll(oneOrder.items);
         }
-        System.out.println(listOrderItem);
+//        System.out.println(listOrderItem);
         Map<String, Double> mapByGoods =
-                listOrderItem.stream().collect(Collectors.groupingBy(OrderItem::getGoogsName, Collectors.summingDouble(OrderItem::getSumma)));
+            listOrderItem.stream().collect(Collectors.groupingBy(OrderItem::getGoogsName, Collectors.summingDouble(OrderItem::getSumma)));
 //        System.out.println(mapByGoods);
-    return null;
+        Map<String, Double> mapByGoodsSort = new TreeMap<>(mapByGoods);
+        return mapByGoodsSort;
     }
+    //  3.7 -----------------------------------
     //  выдать информацию по объему продаж по дням (отсортированную по ключам)
     public Map<LocalDate, Double> statisticsByDay(){
-
-    return null;
+        Map<LocalDate, Double> mapByDay =
+                listOrder.stream().collect(Collectors.groupingBy(Order::getDate, Collectors.summingDouble(Order::getSum)));
+        Map<LocalDate, Double> mapByDaySort = new TreeMap<>(mapByDay);
+//        System.out.println(mapByShop);
+        return mapByDaySort;
     }
+
+    //  =========================================
     public static void main(String[] args){
         OrderProcessor ord1 = new OrderProcessor("C:/Projects/Academy/Java1");
         LocalDate data1 = LocalDate.of(2020, 4, 13);
         LocalDate data2 = LocalDate.of(2020, 4, 19);
-        ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
+//        ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
+        ord1.loadOrders(null, null, null);    //  загрузить информацию о продажах
         //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
         System.out.println(ord1.process(null));
         System.out.println(ord1.statisticsByShop());
         System.out.println(ord1.statisticsByGoods());
+        System.out.println(ord1.statisticsByDay());
     }
 }
