@@ -6,6 +6,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,9 @@ public class OrderProcessor {
             }
             //  2020-04-12T14:41:06
             //  0123456789012345678
-            LocalDate lastDate = checkLastDate(last.substring(0, 10));
+//            LocalDate lastDate = checkLastDate(last.substring(0, 10));
             LocalDateTime lastTime = checkLastTime(last.substring(0, 10) + " " + last.substring(11, 19));
+            LocalDate lastDate = lastTime.toLocalDate();
             if (checkOrders(start, finish, lastDate)) {
                 sumOrder = 0d;   //  сумма товаров по текущему заказу
                 //  загружаем текущий файл
@@ -116,7 +118,14 @@ public class OrderProcessor {
     }
     public LocalDateTime checkLastTime(String last){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.from(dtf.parse(last));
+        LocalDateTime ldt = LocalDateTime.from(dtf.parse(last));
+        ZonedDateTime zdtAtDefault = ldt.atZone( ZoneOffset.ofHours(0) );     //Local time in Asia timezone
+        ZoneId zoneId = ZoneId.of( "Europe/Moscow" );        //Zone information
+        ZonedDateTime zdtAtCurrent = zdtAtDefault.withZoneSameInstant( zoneId );
+//        LocalDateTime ldtX = zdtAtCurrent.toLocalDateTime();
+        return zdtAtCurrent.toLocalDateTime();
+
+//        return LocalDateTime.from(dtf.parse(last));
     }
     //  -----------------------------------
     public static List<Path> createList(String startPath, String pattern){
