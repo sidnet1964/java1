@@ -90,8 +90,10 @@ public class OrderProcessor {
             oList.add(new OrderItem(googsName, count, price));
             sumOrder += count * price;
         }
-        if (good)
+        if (good) {
+            oList.sort((a, b) -> a.getGoogsName().compareTo(b.getGoogsName()));
             return oList;
+        }
         else
             return null;
     }
