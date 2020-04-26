@@ -1,5 +1,6 @@
 package ru.progwards.java1.lessons.compare_if_cycles;
 
+//  Задача 2. Класс TriangleInfo
 public class TriangleInfo {
     public static void main(String[] args) {
         System.out.println(isIsoscelesTriangle(5, 4, 5));

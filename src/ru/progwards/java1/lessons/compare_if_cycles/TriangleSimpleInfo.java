@@ -1,5 +1,6 @@
 package ru.progwards.java1.lessons.compare_if_cycles;
 
+//  Задача 1. Класс TriangleSimpleInfo
 public class TriangleSimpleInfo {
     public static void main(String[] args) {
         System.out.println(isEquilateralTriangle(2,3,2));

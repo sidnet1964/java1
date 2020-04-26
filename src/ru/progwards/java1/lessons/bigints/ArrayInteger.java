@@ -3,6 +3,7 @@ package ru.progwards.java1.lessons.bigints;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+//  Задача 3. Класс ArrayInteger
 public class ArrayInteger {
     byte[] digits;
     ArrayInteger(int n){

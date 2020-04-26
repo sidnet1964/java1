@@ -5,7 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+//  H10 Домашнее задание
+//  Задача 3. Класс CharFilter
 public class CharFilter {
+    //  прочитать файл inFileName и удалить символы, содержащиеся в String filter
     public static void filterFile(String inFileName, String outFileName, String filter) throws IOException{
         try {
             FileReader reader = new FileReader(inFileName);

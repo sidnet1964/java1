@@ -1,12 +1,12 @@
-package ru.progwards.java1.lessons.files;
+package ru.progwards.sid.files_copy;
 
 //import java.io.IOException;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -217,9 +217,13 @@ public class OrderProcessor {
 //        ord1.loadOrders(data1, data2, null);    //  загрузить информацию о продажах
         ord1.loadOrders(null, null, null);    //  загрузить информацию о продажах
         //  результат поместить в List<Order> listOrder, содержащий List<OrderItem> items и double sum
-        System.out.println(ord1.process(null));
-        System.out.println(ord1.statisticsByShop());
-        System.out.println(ord1.statisticsByGoods());
-        System.out.println(ord1.statisticsByDay());
+        List<Order> listO = ord1.process(null);
+        System.out.println(listO);
+        WriteExcel book1 = new WriteExcel();    //  новая книга (объект)
+        book1.writeSheet(listO);
+        //  здесь можно вызвать формирование таблицы для List<Order>
+//        System.out.println(ord1.statisticsByShop());
+//        System.out.println(ord1.statisticsByGoods());
+//        System.out.println(ord1.statisticsByDay());
     }
 }

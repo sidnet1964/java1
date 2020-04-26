@@ -1,6 +1,7 @@
 package ru.progwards.java1.lessons.interfaces;
 import java.util.Arrays;
 
+//  Задача 3. Сортировка интерфейса на основе ArraySort
 public class ArraySort {
     public static void sort(CompareWeight[] a){
     //  public static void sort(int[] a){

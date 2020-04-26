@@ -1,5 +1,7 @@
 package ru.progwards.java1.lessons.compare_if_cycles;
 
+//  H4 Домашнее задание
+//  Задача 3. Класс CyclesGoldenFibo
 public class CyclesGoldenFibo {
     public static void main(String[] args) {
         for (int i=1; i<=15; i++)

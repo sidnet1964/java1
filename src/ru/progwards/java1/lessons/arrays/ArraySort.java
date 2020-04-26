@@ -1,6 +1,8 @@
 package ru.progwards.java1.lessons.arrays;
 import java.util.Arrays;
 
+//  H6 Домашнее задание
+//  Задача 2. Свой алгоритм сортировки, класс ArraySort
 public class ArraySort {
     public static void sort(int[] a){
         int n = a.length;                   //  размер полученного массива

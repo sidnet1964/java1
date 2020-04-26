@@ -1,6 +1,8 @@
 package ru.progwards.java1.lessons.arrays;
 import java.util.Arrays;
 
+//  Задача 3. Класс DIntArray
+//  Реализовать динамический, саморастущий массив целых чисел
 public class DIntArray {
     private int[] m0;    // массив чисел
     public DIntArray(){ // конструктор по умолчанию

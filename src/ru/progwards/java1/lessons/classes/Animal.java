@@ -1,5 +1,8 @@
 package ru.progwards.java1.lessons.classes;
 
+//  H5 Домашнее задание
+//  Задача 1. Классы Animal, Cow, Hamster, Duck
+//  Задача 2. метод calculateFoodWeight
 public class Animal {   //  конструктор
     double weight;
     public Animal(double weight){

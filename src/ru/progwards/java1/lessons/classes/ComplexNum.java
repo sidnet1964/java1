@@ -1,5 +1,6 @@
 package ru.progwards.java1.lessons.classes;
 
+//  Задача 3. Класс ComplexNum
 public class ComplexNum {
     int a;
     int b;

@@ -1,6 +1,7 @@
 package ru.progwards.java1.lessons.arrays;
 import java.util.Arrays;
 
+//  Задача 1. Решето Эратосфена, класс Eratosthenes
 public class Eratosthenes {
     private boolean[] sieve;    // массив чисел, собственно, "решето"
     public Eratosthenes(int N){ // конструктор

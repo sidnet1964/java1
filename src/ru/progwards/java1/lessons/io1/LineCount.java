@@ -4,7 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+//  Задача 1. Класс LineCount
 public class LineCount {
+    //  посчитать количество пустых строк в файле
     public static int calcEmpty(String fileName){
         int count = 0;
         try {

@@ -1,6 +1,8 @@
 package ru.progwards.java1.lessons.bigints;
 import java.math.BigInteger;
 
+//  H9 Домашнее задание
+//  Задача 2. Класс AbsInteger и потомки
 public abstract class AbsInteger {
     static AbsInteger add(AbsInteger num1, AbsInteger num2){
 //        Integer ret = (Integer)num1 + (int)num2;

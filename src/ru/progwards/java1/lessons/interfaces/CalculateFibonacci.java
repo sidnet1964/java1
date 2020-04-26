@@ -1,5 +1,6 @@
 package ru.progwards.java1.lessons.interfaces;
 
+//  Задача 2. Класс CalculateFibonacci
 public class CalculateFibonacci {
     //  20.01.20 00:10
     private static CacheInfo lastFibo;

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+//  Задача 2. Класс Coder
 public class Coder {
+    //  прочитать файл inFileName и перекодировать его посимвольно в соответствии с заданным шифром
     public static void codeFile(String inFileName, String outFileName, char[] code, String logName){
         try {
             FileReader reader = new FileReader(inFileName);

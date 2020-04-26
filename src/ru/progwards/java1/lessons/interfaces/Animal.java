@@ -1,5 +1,7 @@
 package ru.progwards.java1.lessons.interfaces;
 
+//  H8 Домашнее задание
+//  Задача 1. Классы Animal, Cow, Hamster, Duck
 public class Animal implements FoodCompare, CompareWeight {
     double weight;
     public Animal(double weight){
