@@ -355,7 +355,7 @@ public class RamCompiler {
         //      с учетом перехода по меткам
         //  - структура данных для моделирования памяти
 
-        RamCompiler pr1 = new RamCompiler("C:/Projects/Academy/Java1/factorial.txt");
+        RamCompiler pr1 = new RamCompiler("C:/Users/sidnet1964/IdeaProjects/HelloWorld/src/ru/progwards/java1/lessons/N19/factorial.txt");
 
         System.out.println("Переменная errorCom = " + pr1.isErrorCom());
         //  есть вариант определить в конструкторе каталог, а имена файлов сделать стандартными
