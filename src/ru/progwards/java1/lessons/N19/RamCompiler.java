@@ -220,7 +220,7 @@ public class RamCompiler {
         for (int ind = 0; ind < program.size(); ind++) {
 //            System.out.println(ind + " | " + program.get(ind));
             LineProgram line1 = program.get(ind);
-            System.out.println(ind + " | " + line1 + " - memory = " + memory);
+//  отладка          System.out.println(ind + " | " + line1 + " - memory = " + memory);
             switch (line1.commandName) {
                 case "READ":    //  Ri ← next input
 //                    String str = "3";   //  временно
