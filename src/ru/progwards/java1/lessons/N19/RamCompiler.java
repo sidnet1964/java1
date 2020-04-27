@@ -1,4 +1,4 @@
-package ru.progwards.sid.N19;
+package ru.progwards.java1.lessons.N19;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ public class RamCompiler {
     public Map<String, Integer> labelMap;
     public List<LineProgram> program;   //  хранение программы
     public ArrayDeque<Integer> input;   //  входные данные
-    public List<String> output;
+    public ArrayDeque<Integer> output;  //  выходные данные
     public Map<Integer, Integer> memory;
     public String textErrCom;
     public boolean errorCom;
@@ -29,7 +29,7 @@ public class RamCompiler {
         labelMap    = new TreeMap<>();
         program     = new ArrayList<>();
         input       = new ArrayDeque<>();
-        output      = new ArrayList<String>();
+        output      = new ArrayDeque();
         memory      = new TreeMap<>();
         textErrCom = null;
         errorCom = false;  //  наличие ошибок компиляции
@@ -38,27 +38,31 @@ public class RamCompiler {
         loadProgram(fileName);    //  загрузить информацию
     }
 
+    public boolean isErrorCom() {
+        return errorCom;
+    }
+
+    public boolean isErrorRun() {
+        return errorRun;
+    }
+
+    //  выходной поток
+    List<Integer> output(){
+        List<Integer> output = new ArrayList<>(this.output);
+        return output;
+    }
+
+    //   регистры программы
     List<Integer> registers(){
-        List<Integer> registers_1 = new ArrayList<>();
+        List<Integer> registers = new ArrayList<>(this.memory.values());
 //        System.out.println(memory.forEach());
 //        int maxReg = memory
 //        Map.Entry< K,V> pollLastEntry()
 //        Map.Entry<Integer,Integer> lastEntry()
 //        Integer highestKey = memory.lastKey();
 //        Integer lowestKey = this.memory.firstKey();
-        TreeMap<Integer, Integer> map = new TreeMap<>();
-        map.put(3, 11);
-        map.put(2, 11);
-        map.put(1, 11);
-        map.put(5, 11);
-        map.put(4, 11);
 
-        Integer highestKey = map.lastKey();
-        Integer lowestKey = map.firstKey();
-        System.out.println(highestKey);
-        System.out.println(lowestKey);
-
-        return registers_1;
+        return registers;
     }
     //  -----------------------------------
     //  обработка содержимого одного файла команд
@@ -96,10 +100,21 @@ public class RamCompiler {
             if (pos > 0){
                 String labelName = line1.substring(0, pos).toLowerCase();
                 /// проверить метку на валидность ---
+                //  добавить новую метку в таблицу
+                if (labelMap.containsKey(labelName)){
+                    //  такая метка уже есть - ошибка
+                    textErrCom = '"' + line1 + '"' + " - ошибка в строке " + numLine;
+                    System.out.println(textErrCom);
+                    errorCom = true;
+                    return;
+                }
                 labelMap.put(labelName, program.size());
                 program.add(new LineProgram("GOTO", labelName));    //  оператор метки
 //                System.out.println("labelName = " + labelName);
-                continue;
+//                continue;
+                line1 = line1.substring(pos+1).trim();   //  обрезать метку и продолжить
+                if (line1.isEmpty())            //  3) пропускаем пустые строки (повторно)
+                    continue;
             }
             //  обработка строки ввода  <input> 1 2 3 4 5 6 7 1 1 1 2 5 0
             pos = line1.indexOf("<input>");
@@ -197,6 +212,11 @@ public class RamCompiler {
     //  --------------------------------
     //  выполнить заруженную иразобранную программу
     public void execute(){
+        if (isErrorCom()) {
+            System.out.println("В программе обнаружена ошибка");
+            System.out.println("Переменная errorCom = " + isErrorCom());
+            return;
+        }
         for (int ind = 0; ind < program.size(); ind++) {
 //            System.out.println(ind + " | " + program.get(ind));
             LineProgram line1 = program.get(ind);
@@ -213,11 +233,19 @@ public class RamCompiler {
                     break;
                 case "WRITE":   //  output ← Ri
                     int bufferW = 0;
-                    if (line1.prefix == M1)
-                        bufferW = line1.register;
-                    else
-                        bufferW = memory.getOrDefault(line1.register, Z0);   //  0 по умолчанию
-                    System.out.println("RAM - вывод -> " + bufferW);
+                    switch (line1.prefix){
+                        case M1:
+                            bufferW = line1.register;
+                            break;
+                        case M2:
+                            bufferW = memory.getOrDefault(line1.register, Z0);   //  0 по умолчанию
+                            break;
+                        case M3:
+                            bufferW = memory.getOrDefault(line1.register, Z0);   //  0 по умолчанию
+                            bufferW = memory.getOrDefault(bufferW, Z0);   //  0 по умолчанию
+                    }
+                    output.add(bufferW);
+                    System.out.println("RamCompiler - результат -> " + bufferW);
                 case "LOAD":    //  R0 ← Ri
                     int bufferL = 0;
                     if (line1.prefix == M1)
@@ -227,8 +255,22 @@ public class RamCompiler {
                     memory.put(R0, bufferL);
                     break;
                 case "STORE":   //  Ri ← R0
-                    int bufferS = memory.get(R0);
-                    memory.put(line1.register, bufferS);
+                    int bufferS = memory.get(R0);   //  содержимое R0
+                    int register = 0;
+                    switch (line1.prefix){
+                        case M1:
+//                            bufferS = line1.register;
+//                            --- ошибка исполнения
+                            break;
+                        case M2:
+                            register = line1.register;
+                            break;
+                        case M3:
+                            register = line1.register;
+                            //  --- проверить логику по поводу Z0
+                            register = memory.getOrDefault(register, Z0);   //  0 по умолчанию
+                    }
+                    memory.put(register, bufferS);
                     break;
                 case "ADD": //  R0 ← R0 + Ri        |
                 case "SUB": //  R0 ← R0 - Ri        |
@@ -261,7 +303,7 @@ public class RamCompiler {
             }
         }
     }
-    //  арифметические операйии + - * /
+    //  арифметические операции + - * /
     void arithmetic(LineProgram line1){
         //  1) подготовка операндов
         long bufferRI = 0;   //  буфер для хранения результата, long - для контроля переполнения
@@ -295,7 +337,7 @@ public class RamCompiler {
 //            throw new ArithmeticException( this + ": исключение в arithmetic");
             memory.put(R0, Z0);  //  значение НЕ допустимо
     }
-    public enum commandName { ADD, DIV, HALT, JGTZ, JMP, JZ, LOAD, MUL, READ, STORE, SUB, WRITE }
+//    public enum commandName { ADD, DIV, HALT, JGTZ, JMP, JZ, LOAD, MUL, READ, STORE, SUB, WRITE }
 
     public static void main(String[] args) {
         //  1.  загрузка текста программы
@@ -312,24 +354,23 @@ public class RamCompiler {
         //  - структуры данных для хранения программы (код + операнд)
         //      с учетом перехода по меткам
         //  - структура данных для моделирования памяти
-        RamCompiler pr1 = new RamCompiler("C:/Projects/Academy/Java1/factorial.txt");
+
+        RamCompiler pr1 = new RamCompiler("C:/Projects/Academy/Java1/reverse.txt");
+
+        System.out.println("Переменная errorCom = " + pr1.isErrorCom());
         //  есть вариант определить в конструкторе каталог, а имена файлов сделать стандартными
         System.out.println("pr1.labelMap = " + pr1.labelMap);
-//        System.out.println(pr1.program);
-//        for (String line1 : pr1.program) {
-//            System.out.println(line1);
-//        }
-//        for (int ind = 0; ind < pr1.program.size(); ind++)
-//            System.out.println(ind + " | " + pr1.program.get(ind));
+
         pr1.execute();
+
         System.out.println("pr1.memory = " + pr1.memory);
 //        String highestKey = pr1.labelMap.lastKey();
-        System.out.println(pr1.registers());
-
+//        System.out.println(pr1.registers());
+        System.out.println("pr1.registers() = " + pr1.registers());
 //        System.out.println("pr1.memory = " + pr1.memory.lastKey());
-        //        System.out.println(Integer.MAX_VALUE);
-
+        System.out.println("pr1.output() = " + pr1.output());
     }
+
 }
 //  "ADD", "DIV", "HALT", "JGTZ", "JMP", "JZ", "LOAD", "MUL", "READ", "STORE", "SUB", "WRITE"
 //  Постановка задачи

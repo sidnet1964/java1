@@ -1,4 +1,4 @@
-package ru.progwards.sid.N19;
+package ru.progwards.java1.lessons.N19;
 
 //  объект класса содержит одну команду с параметрами
 public class LineProgram {
