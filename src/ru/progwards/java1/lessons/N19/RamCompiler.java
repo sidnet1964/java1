@@ -14,8 +14,10 @@ public class RamCompiler {
     final static char M3 = '*';    //
     //  список всех команд эмулятора
     final static String[] command = {"ADD", "DIV", "GOTO", "HALT", "JGTZ", "JMP", "JZ", "LOAD", "MUL", "READ", "STORE", "SUB", "WRITE"};
-    final static String EC11 = " - недопустимый модификатор - ";
-    final static String ER11 = " - регистр с отрицательным номером ";
+
+    final static String EC11 = " - ошибка в имени файла ";
+    final static String EC21 = " - недопустимый модификатор - ";
+    final static String ER21 = " - регистр с отрицательным номером ";
 
 //    String  fileName; //  нужно ли делать свойством?
     TreeMap<String, Integer> labelMap;
@@ -24,9 +26,6 @@ public class RamCompiler {
     List<Integer> outputList;   //  выходные данные для вывода (возврата)
     ArrayDeque<Integer> input;  //  входные данные
     TreeMap<Integer, Integer> memory;
-    public String textErrCom;
-    public boolean errorCom;
-    public boolean errorRun;
     public int numLine;             // номер строки исходной программы
     public int indexLineProgram;    // номер строки выполняемой программы, глобальная
 
@@ -38,87 +37,33 @@ public class RamCompiler {
         input       = new ArrayDeque<>();
         outputList  = new ArrayList<>();
         memory      = new TreeMap<>();
-        textErrCom = null;
-        errorCom = false;  //  наличие ошибок компиляции
-        errorRun = false;  //  наличие ошибок выполнения
         memory.put(R0, Z0); //  инициализировать нулевой регистр
         numLine = 0;     // номер строки исходной программы
         indexLineProgram = 0;    // номер строки выполняемой программы
         loadProgram(fileName);    //  загрузить информацию
     }
-
-    //  входной поток
-    public List<Integer> input(){
-//        List<Integer> output = new ArrayList<>(this.output);
-        return inputList;
-    }
-    //  выходной поток
-    public List<Integer> output(){
-//        List<Integer> output = new ArrayList<>(this.output);
-        return outputList;
-    }
-
-    //   регистры программы
-//    public List<Integer> registers(){
-//        List<Integer> registers = new ArrayList<>(this.memory.values());
-//        return registers;
-//    }
-    public Map<Integer, Integer> registers(){
-        return memory;
-    }
-
     //  -----------------------------------
     //  обработка содержимого одного файла команд
-    void loadProgram(String fileName) {
-//        Integer highestKey = memory.lastKey();
-        String commandName = "";
-        int operand = 0;
+    void loadProgram(String fileName){
         List<String> allLines = null;
         try {
             allLines = Files.readAllLines(Paths.get(fileName)); //  , UTF_8
         } catch (IOException e) {
-            throw new WrongCommand(" - ошибка в имени файла " + fileName, numLine);
+            throw new WrongCommand(EC11 + fileName, numLine);
         }
-//        int numLine = 0;    //  номер строки прграммы
-        for (String line1 : allLines) {
+        for (String lineTxt : allLines) {
             numLine++;      //  увеличить счетчик независимо от содержания
-            line1 = line1.trim();           //  1)  удаляем пробелы из строки
-            int pos = line1.indexOf(";");   //  2) поиск комментария
-            if (pos == 0)                   //  2) комментарий с начала строки
-                continue;
-            if (pos > 0)                    //  2)  комментарий в конце строки
-                line1 = line1.substring(0, pos);
-            if (line1.isEmpty())            //  3) пропускаем пустые строки
-                continue;
-            //  в этом варианте метка размещается на отдельной строке
-            pos = line1.indexOf(":");       //  4) признак метки (label)
-            if (pos == 0){
-                textErrCom = "Отсутствует метка в строке " + numLine;
-                throw new WrongCommand(" - отсутствует метка перед /':/' " + line1, numLine);
-                //  ошибка компиляции - отсутствует метка перед символом :
-                //  длина метки и содержание пока не определено
-                //  записать сообшениние в выходной поток
-            }
-            if (pos > 0){
-                String labelName = line1.substring(0, pos).toLowerCase();
-                /// проверить метку на валидность ---
-                //  добавить новую метку в таблицу
-                if (labelMap.containsKey(labelName))
-                    throw new WrongCommand(" - метка уже использована " + line1, numLine);
-                labelMap.put(labelName, program.size());
-                program.add(new LineProgram("GOTO", numLine, labelName));    //  оператор метки
-//                continue;
-                line1 = line1.substring(pos+1).trim();   //  обрезать метку и продолжить
-                if (line1.isEmpty())            //  3) пропускаем пустые строки (повторно)
-                    continue;
-            }
+            if  ((lineTxt = clearSpace(lineTxt.trim())).isEmpty())
+                continue;      //  пустая строка после очистки
+            if  ((lineTxt = clearLabel(lineTxt).trim()).isEmpty())
+                continue;      //  пустая строка после очистки
             //  обработка строки ввода  <input> 1 2 3 4 5 6 7 1 1 1 2 5 0
-            pos = line1.indexOf("<input>");
+            int pos = lineTxt.indexOf("<input>");
             if (pos >= 0) {
-                checkInput(line1.substring(pos + 7));
+                checkInput(lineTxt.substring(pos + 7));
                 continue;
             }
-            checkCommand(line1);
+            checkCommand(lineTxt);
         }
         //  проход по сформированной программе c проверкой меток
         for (LineProgram lineP : program) {
@@ -128,10 +73,50 @@ public class RamCompiler {
                 if (index == null)
                     throw new WrongCommand(" - неизвестная метка " + label, numLine);
                 else
-                    lineP.register = (int) index;
+                    lineP.register = (int)index;
             }
-//                if (!labelMap.containsKey(label))
         }
+    }
+    //  --------------------------------
+    String clearSpace(String lineTxt){
+        int pos = lineTxt.indexOf(";");   //    признак комментария
+        if (pos > 0)                    //  комментарий в конце строки
+            return lineTxt.substring(0, pos).trim();
+        if (pos == 0)                   //  комментарий с начала строки
+            return "";
+        return lineTxt.trim();
+    }
+    //  --------------------------------
+    String clearLabel(String lineTxt){
+        //  метку от двоеточия отделять пробелом НЕЛЬЗЯ
+        int pos = lineTxt.indexOf(":"); //  признак метки (label)
+        if (pos == 0){
+            throw new WrongCommand(" - отсутствует метка перед /':/' " + lineTxt, numLine);
+        }
+        if (pos > 0) {  //
+            String labelName = lineTxt.substring(0, pos).trim().toLowerCase();
+            if (checkLabel(labelName)) {  //  проверить метку на валидность
+                //  добавить новую метку в таблицу
+                if (labelMap.containsKey(labelName))
+                    throw new WrongCommand(" - метка уже использована " + lineTxt, numLine);
+                labelMap.put(labelName, program.size());
+                program.add(new LineProgram("GOTO", numLine, labelName));    //  оператор метки
+                lineTxt = lineTxt.substring(pos + 1).trim();   //  обрезать метку и продолжить
+            }
+            else
+                throw new WrongCommand(" - метка не является идентификатором " + lineTxt, numLine);
+        }
+        return lineTxt; //  вернуть параметр целиком если не найдена метка
+    }
+    //  --------------------------------
+    //  проверить метку соласно требованиям идентификатора (без резервации)
+    boolean checkLabel(String IsLabel){
+        boolean s1 = Character.isJavaIdentifierStart(IsLabel.charAt(0));
+        //  Character.isLetter(IsLabel.charAt(0)) &&//  первый символ должен быть буквой
+        char [] s2 = IsLabel.toCharArray(); //  остальные символы (если есть)
+        for (char si : s2)
+            s1 = s1 && Character.isJavaIdentifierPart(si);  //  && Character.isAlphabetic(si)
+        return s1;
     }
     //  --------------------------------
     //  разобрать строку ввода на части, результат записать в очередь
@@ -195,9 +180,9 @@ public class RamCompiler {
         }
         //  дополнительно проверить невозможность некоторых модификаторов
         if (nameComm.equals("READ") && modifier == M1)
-            throw new WrongCommand(EC11 + line0, numLine);
+            throw new WrongCommand(EC21 + line0, numLine);
         if (nameComm.equals("STORE") && modifier == M1)
-            throw new WrongCommand(EC11 + line0, numLine);
+            throw new WrongCommand(EC21 + line0, numLine);
         program.add(new LineProgram(nameComm, numLine, modifier, register));
     }
 
@@ -219,13 +204,6 @@ public class RamCompiler {
     }
 
     //  --------------------------------
-    //  разобрать операнд
-    boolean checkLabel(String thisIsLabel){
-        //  первый символ должен быть буквой
-        //  остальные символы тоже надо проверить ---
-        return Character.isLetter(thisIsLabel.charAt(0));
-    }
-    //  --------------------------------
     //  выполнить заруженную иразобранную программу
     public void execute(){
         for (indexLineProgram = 0; indexLineProgram < program.size(); indexLineProgram++) {
@@ -244,7 +222,7 @@ public class RamCompiler {
                         case M3:
                             bufferW = memory.getOrDefault(line1.register, Z1);
                             if (bufferW < 0)
-                                throw new WrongCommand(ER11 + line1, line1.commandLine);
+                                throw new WrongCommand(ER21 + line1, line1.commandLine);
                             bufferW = memory.getOrDefault(bufferW, Z1);
                     }
                     outputList.add(bufferW);
@@ -261,7 +239,7 @@ public class RamCompiler {
                         case M3:
                             bufferL = memory.getOrDefault(line1.register, Z1);
                             if (bufferL < 0)
-                                throw new WrongCommand(ER11 + line1, line1.commandLine);
+                                throw new WrongCommand(ER21 + line1, line1.commandLine);
                             bufferL = memory.getOrDefault(bufferL, Z1);
                     }
                     memory.put(R0, bufferL);
@@ -280,7 +258,7 @@ public class RamCompiler {
                             registerS = line1.register;
                             //  --- проверить логику по поводу Z1
                             if (registerS < 0)
-                                throw new WrongCommand(ER11 + line1, line1.commandLine);
+                                throw new WrongCommand(ER21 + line1, line1.commandLine);
                             registerS = memory.getOrDefault(registerS, Z1);
                     }
                     memory.put(registerS, bufferS);
@@ -302,7 +280,7 @@ public class RamCompiler {
                             registerR = line1.register;
                             //  --- проверить логику по поводу Z1
                             if (registerR < 0)
-                                throw new WrongCommand(ER11 + line1, line1.commandLine);
+                                throw new WrongCommand(ER21 + line1, line1.commandLine);
                             registerR = memory.getOrDefault(registerR, Z1);
                     }
 //-
@@ -367,7 +345,7 @@ public class RamCompiler {
             case M3:
                 bufferRI = memory.getOrDefault(line1.register, Z1);
                 if (bufferRI < 0)
-                    throw new WrongCommand(ER11 + line1, line1.commandLine);
+                    throw new WrongCommand(ER21 + line1, line1.commandLine);
                 bufferRI = memory.getOrDefault((int)bufferRI, Z1);
         }
         //  2) выполнение операции
@@ -397,6 +375,27 @@ public class RamCompiler {
     }
 //    public enum commandName { ADD, DIV, HALT, JGTZ, JMP, JZ, LOAD, MUL, READ, STORE, SUB, WRITE }
 
+    //  входной поток
+    public List<Integer> input(){
+//        List<Integer> output = new ArrayList<>(this.output);
+        return inputList;
+    }
+    //  выходной поток
+    public List<Integer> output(){
+//        List<Integer> output = new ArrayList<>(this.output);
+        return outputList;
+    }
+
+    //   регистры программы
+//    public List<Integer> registers(){
+//        List<Integer> registers = new ArrayList<>(this.memory.values());
+//        return registers;
+//    }
+    public Map<Integer, Integer> registers(){
+        return memory;
+    }
+
+
     public static void main(String[] args) {
         //  1.  загрузка текста программы
         //  2.  загузка файла с данными или ввод
@@ -415,7 +414,7 @@ public class RamCompiler {
 
         RamCompiler pr1 = null;
         try {
-            pr1 = new RamCompiler("C:/Users/sidnet1964/IdeaProjects/HelloWorld/src/ru/progwards/java1/lessons/N19/bubble.txt");
+            pr1 = new RamCompiler("C:/Users/sidnet1964/IdeaProjects/HelloWorld/src/ru/progwards/java1/lessons/N19/bub.txt");
         } catch (WrongCommand e ) {
             System.out.println(e.getMessage());
         }
@@ -437,7 +436,6 @@ public class RamCompiler {
 //            long size = 100;
 //            int[] intArr = new Random().ints(size, -99, 99).toArray();
 //            System. out.println("intArr = " + Arrays.toString(intArr));
-
         }
     }
 
