@@ -1,0 +1,28 @@
+﻿<input> -51 25
+
+; load
+read 1 ; делимое
+read 2 ; делитель
+
+load =0
+store 3
+
+loop:
+    load 1    ;25
+    sub 2     ;25-10=15 15-10=5 5-10=-5
+    jgtz cont
+    jz cont
+    jmp final
+
+cont:
+    store 1 ;15 5
+    load 3  ;0
+    add =1  ;0+1=1
+    store 3 ;1
+    jmp loop
+
+final:
+    write 3
+    add 2
+    write 0
+halt

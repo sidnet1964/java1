@@ -76,8 +76,10 @@ public class RamCompiler {
                     lineP.register = (int)index;
             }
         }
+//        System.out.println();
     }
     //  --------------------------------
+    //  удаление комментариев и пустых строк
     String clearSpace(String lineTxt){
         int pos = lineTxt.indexOf(";");   //    признак комментария
         if (pos > 0)                    //  комментарий в конце строки
@@ -87,6 +89,7 @@ public class RamCompiler {
         return lineTxt.trim();
     }
     //  --------------------------------
+    //  поиск, проверка и сохранение меток
     String clearLabel(String lineTxt){
         //  метку от двоеточия отделять пробелом НЕЛЬЗЯ
         int pos = lineTxt.indexOf(":"); //  признак метки (label)
@@ -120,19 +123,16 @@ public class RamCompiler {
     }
     //  --------------------------------
     //  разобрать строку ввода на части, результат записать в очередь
-    void checkInput(String line0) {
-        //  line0 - остаток строки со списком данных
+    void checkInput(String line0) { //  line0 - остаток строки со списком данных
         try (Scanner scanner = new Scanner(line0)) {
-            while (scanner.hasNext()) {
+            while (scanner.hasNext())
                 if (scanner.hasNextInt()) {
                     int operand = scanner.nextInt();
-                    input.offerLast(operand);   //  .offer(operand);
+                    input.offerLast(operand);
                     inputList.add(operand);
-                    //  --- параллельно заполнять список
                 }
                 else
                     throw new WrongCommand(" - ожидаются тип int " + line0, numLine);
-            }
         }
     }
     //  --------------------------------
@@ -141,7 +141,6 @@ public class RamCompiler {
         String operand = "-";
         char modifier = '-';
         int register = 0;
-
         String[] subStr = line0.split(" "); // Разделения строки str с помощью метода split()
         String nameComm = subStr[0].toUpperCase();  //  перевести команду в верхний регистр
         int ind1 = Arrays.binarySearch(command, nameComm);  //  поиск в сортированном массиве
@@ -177,15 +176,14 @@ public class RamCompiler {
                     register = safetyInteger(operand, line0);//  i это операнд
                 } else
                     throw new WrongCommand(" - неизвестный модификатор " + line0, numLine);
+                //  дополнительно проверить невозможность некоторых модификаторов
+                if (nameComm.equals("READ") && modifier == M1)
+                    throw new WrongCommand(EC21 + line0, numLine);
+                if (nameComm.equals("STORE") && modifier == M1)
+                    throw new WrongCommand(EC21 + line0, numLine);
+                program.add(new LineProgram(nameComm, numLine, modifier, register));
         }
-        //  дополнительно проверить невозможность некоторых модификаторов
-        if (nameComm.equals("READ") && modifier == M1)
-            throw new WrongCommand(EC21 + line0, numLine);
-        if (nameComm.equals("STORE") && modifier == M1)
-            throw new WrongCommand(EC21 + line0, numLine);
-        program.add(new LineProgram(nameComm, numLine, modifier, register));
     }
-
     //  --------------------------------
     //  безопасное преобразование строки в int
     int safetyInteger(String operandStr, String line0){
@@ -414,14 +412,14 @@ public class RamCompiler {
 
         RamCompiler pr1 = null;
         try {
-            pr1 = new RamCompiler("C:/Users/sidnet1964/IdeaProjects/HelloWorld/src/ru/progwards/java1/lessons/N19/bub.txt");
+            pr1 = new RamCompiler("C:/Users/sidnet1964/IdeaProjects/HelloWorld/src/ru/progwards/java1/lessons/N19/sort.txt");
         } catch (WrongCommand e ) {
             System.out.println(e.getMessage());
         }
         if (pr1 != null) {
             //  проверить на null
             //  есть вариант определить в конструкторе каталог, а имена файлов сделать стандартными
-//            System.out.println("pr1.labelMap = " + pr1.labelMap);
+            System.out.println("pr1.labelMap = " + pr1.labelMap);
 
             pr1.execute();
 
@@ -436,6 +434,8 @@ public class RamCompiler {
 //            long size = 100;
 //            int[] intArr = new Random().ints(size, -99, 99).toArray();
 //            System. out.println("intArr = " + Arrays.toString(intArr));
+//            System.out.println(51/-25);
+//            System.out.println(51%-25);
         }
     }
 

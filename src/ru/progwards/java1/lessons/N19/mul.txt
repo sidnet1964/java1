@@ -1,0 +1,31 @@
+﻿<input> 1111 2222
+
+; load
+read 1 ; множитель 1
+read 2 ; множитель 2
+
+; change
+load 1
+sub 2
+jgtz do
+load 1
+store 3
+load 2
+store 1
+load 3
+store 2
+
+do:
+load =0
+store 3
+
+loop:
+  load 3
+  add 1
+  store 3
+  load 2
+  sub =1
+  store 2
+  jgtz loop
+  write 3
+halt
