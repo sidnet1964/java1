@@ -440,10 +440,8 @@ public class RamCompiler {
     }
 
 }
-//  "ADD", "DIV", "HALT", "JGTZ", "JMP", "JZ", "LOAD", "MUL", "READ", "STORE", "SUB", "WRITE"
 //  Постановка задачи
 //Создать класс RamCompiler, который принимает на вход исходный код на RAM и выполняет программу.
-//
 //Конструктор RamCompiler(String fileName)
 //Метод execute() - выполняет программу
 //Метод List<int> input() - входящий поток
