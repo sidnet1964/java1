@@ -22,7 +22,7 @@ public class HanoiTower {
         ArrayDeque<Integer> pin1 = new ArrayDeque<Integer>();
         ArrayDeque<Integer> pin2 = new ArrayDeque<Integer>();
         ArrayDeque<Integer> pin3 = new ArrayDeque<Integer>();
-        pin = new ArrayDeque[]{pin1, pin2, pin3}; //  массив штырей
+        pin = new ArrayDeque[]{new ArrayDeque<Integer>(), new ArrayDeque<Integer>(), new ArrayDeque<Integer>()}; //  массив штырей
 //        pin = new ArrayDeque<Integer>()[3]; //  массив штырей
         for (int i = size; i>0; i--)    //  внизу кольцо size, вверху - 1
             pin[pos].addFirst(i);
