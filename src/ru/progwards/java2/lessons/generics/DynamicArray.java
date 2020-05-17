@@ -14,7 +14,8 @@ public class DynamicArray<T> {
         size = 0;
     }
     //  --------------------------------
-    public void add(T num){   //  добавляет элемент num в конец массива
+    //  добавляет элемент в конец массива
+    public void add(T num){
         if (array.length == size) {
             int newSize = (size == 0) ? 1 : array.length * 2;  //   удвоить размер
 //            System.out.println("Увеличение массива до - " + newSize);
@@ -26,7 +27,8 @@ public class DynamicArray<T> {
         array[size++] = num;
     }
     //  --------------------------------
-    public void atInsert(int pos, T num){
+    //  добавляет элемент в заданную позицию позицию массива
+    public void insert(int pos, T num){
         if (pos > size)
         {System.out.println("pos = " + pos + " > размера массива = " + (size) ); return;}
         if (array.length == size) {
@@ -51,8 +53,9 @@ public class DynamicArray<T> {
         size++;
     }
     //  --------------------------------
+    //  удаляет элемент в позиции pos массива
     //  ArrayIndexOutOfBoundsException - удаление индекса > length
-    public void atDelete(int pos){  // удаляет элемент в позиции pos массива
+    public void remove(int pos){
         if (size == 0)
             {System.out.println("длина массива = " + (size) ); return;}
         if (pos >= size)
@@ -74,7 +77,8 @@ public class DynamicArray<T> {
         size--;
     }
     //  --------------------------------
-    public T at(int pos){
+    //  возвращает элемент по индексу pos
+    public T get(int pos){
         if (pos >= 0 && pos < size)
             return array[pos];
         else
@@ -82,10 +86,10 @@ public class DynamicArray<T> {
 //            return Integer.MAX_VALUE;
     }
     //  --------------------------------
-        public int size() {
-            return size;
-        }
-
+    //  возвращает текущий реальный объем массива
+    public int size() {
+        return size;
+    }
     //  --------------------------------
     public static void main(String[] args) {
         final int count1 = 9;
@@ -103,7 +107,7 @@ public class DynamicArray<T> {
 
         for(int i=0; i<count1; i++)
 //            din.atDelete(din.size-1);
-            din.atInsert(0, i*i);
+            din.insert(0, i*i);
         long stop = System.currentTimeMillis();
         System.out.println("DynamicArray <ins> time ="+(stop-middle));
 
@@ -126,9 +130,9 @@ public class DynamicArray<T> {
 //        System.out.println("din.length = " + din.array.length);
 //        System.out.println("din.size() = " + din.size());
 
-        System.out.println(din.at(0));
-        System.out.println(din.at(count1 - 1));
-        System.out.println(din.at(din.array.length+100));   //  ???
+        System.out.println(din.get(0));
+        System.out.println(din.get(count1 - 1));
+        System.out.println(din.get(din.array.length+100));   //  ???
 //        din.atDelete(0);
     }
 }
