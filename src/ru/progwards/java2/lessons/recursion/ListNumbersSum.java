@@ -1,22 +1,24 @@
 package ru.progwards.java2.lessons.recursion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AsNumbersSum {
+public class ListNumbersSum {
     static int[] intArr = new int[10];
+    static ArrayList<Integer> intList = new ArrayList<>();
     String rezult = "";
     public static String asNumbersSum(int number){
-        AsNumbersSum X1 = new AsNumbersSum();
+        ListNumbersSum X1 = new ListNumbersSum();
         X1.genSet(number, number, 0, '*');
         return X1.rezult.substring(0, X1.rezult.length()-1);
     }
-
 //  n - осталось набрать слагаемых на сумму n
 //  k - слагаемые не больше k
 //  i - номер очередного слагаемого
     //  ----------------------------------------------
+    //  попробую через List
     void genSet(int n, int k, int i, char call) {
-        System.out.println(n + "|" + k + "|" + i + "|" + call + "|" + Arrays.toString(intArr));
+        System.out.println(n + "|" + k + "|" + i + "|" + call + "|" + Arrays.toString(intArr) + "|" + intList);
         if ( n < 0 )
             return;
         if ( n == 0 ) {
@@ -28,6 +30,7 @@ public class AsNumbersSum {
         else {
             if (n >= k) {
                 intArr[i] = k;
+                intList.add(i, k);
                 genSet(n - k, k, i + 1, '+');
             }
             if (k > 1)
