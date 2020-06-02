@@ -37,7 +37,7 @@ public class Calculator {
                 //  а что же за скобка у нас объявилась?
                 if (exp.charAt(p1 + 1 + p2) == ')') {
                     String subExpression = exp.substring(p1 + 1, p1 + 1 + p2);
-                    System.out.println(subExpression);
+//                    System.out.println(subExpression);
                     String subInteger = String.valueOf(calculate(subExpression));
                     exp = exp.replace("(" + subExpression + ")", subInteger);
                 } else {
@@ -59,7 +59,7 @@ public class Calculator {
         String le = expression.substring(0, position);   //  левая часть
         String ri = expression.substring(position+1);    //  правая часть
 
-        System.out.println(le + "|"+op+"|" + ri);
+//        System.out.println(le + "|"+op+"|" + ri);
         rezult = switch (op) {
             case '+' -> calculate(le) + calculate(ri);
             case '-' -> calculate(le) - calculate(ri);
@@ -80,6 +80,6 @@ public class Calculator {
         }
     }
     public static void main(String[] args) {
-        System.out.println(calculate("((1)+2)*((2+3))"));
+        System.out.println(calculate("((((111/22))))"));
     }
 }
