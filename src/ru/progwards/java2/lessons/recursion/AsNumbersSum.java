@@ -36,8 +36,8 @@ public class AsNumbersSum {
     }
     //  ----------------------------------------------
     public static void main(String[] args) {
-        int m = 5;
-        System.out.println(asNumbersSum(5));
+        int m = 4;
+        System.out.println(asNumbersSum(m));
     }
 }
 // Определение Разбиением натурального числа n называется набор натуральных чисел λ=(λ1,…, λk),
