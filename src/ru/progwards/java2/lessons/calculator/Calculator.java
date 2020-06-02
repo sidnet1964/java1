@@ -3,20 +3,23 @@ package ru.progwards.java2.lessons.calculator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//  Задача 1. Класс Calculator
+//  Реализуйте метод public static int calculate(String expression), который
+//  вычисляет арифметическое выражение, заданное в виде символьной строки.
 public class Calculator {
     public static int calculate(String expression){
         int position = -1;
         int rezult = 0;
         //  обработка скобок
         expression = brackets(expression);
-        //  найти знак сложения +
+        //  найти знак сложения + и вычитания -
         position = patternIndexOf(expression, "[+-]");
         if (position > 0){
             //  может быть и 0 для унарного оператора
             rezult = operation(position, expression);
         }
         else {
-            //  найти знак умножения *
+            //  найти знаки умножения * и деления /
             position = patternIndexOf(expression, "[*/]");
             if (position > 0){
                 rezult = operation(position, expression);
@@ -27,7 +30,8 @@ public class Calculator {
         return rezult;
     }
     //  --------------------------------
-    //  обработка вложенных скобок
+    //  Задача 2. Дополнительные условия
+    //  Добавить возможность использования скобок () для задания приоритетов операций.
     static String brackets(String exp) {
         int p1 = patternIndexOf(exp, "[(]");
         if (p1 >= 0) {
