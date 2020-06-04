@@ -26,6 +26,6 @@ public class Eratosthenes {
         int i = 40;
         Eratosthenes sito = new Eratosthenes(40);
         System.out.println(sito.isSimple(i));
-//        System.out.println(Arrays.toString(sito.sieve));
+        System.out.println(Arrays.toString(sito.sieve));
     }
 }

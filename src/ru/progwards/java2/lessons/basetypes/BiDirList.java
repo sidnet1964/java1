@@ -15,7 +15,6 @@ public class BiDirList<T> implements Iterable<T>{
         ListItem<T> curr;
         MyIterator(ListItem<T> curr){
             this.curr = curr;
-//        curr = head;
         }
         @Override
         public boolean hasNext() {
@@ -71,10 +70,6 @@ public class BiDirList<T> implements Iterable<T>{
                     '}';
         }
     }
-//            "prev=" + prev +
-//            ", item=" + item +
-//            ", next=" + next +
-
     //  ----------------------------------------------
     //  структура списка не изменяется, но добавляется size
     private ListItem<T> head;
