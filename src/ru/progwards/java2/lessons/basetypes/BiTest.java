@@ -2,9 +2,6 @@ package ru.progwards.java2.lessons.basetypes;
 //  Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0 - удаление из пустого
 //  Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 1, Size: 1 - удаление отсутствующего
 
-import org.apache.poi.ss.formula.functions.T;
-import ru.progwards.sid.A04.MyClass;
-
 import java.util.*;
 
 public class BiTest {
