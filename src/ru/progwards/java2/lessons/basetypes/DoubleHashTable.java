@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
 //  Реализовать класс DoubleHashTable - хэш таблица с двойным хэшированием
 //  При двойном хешировании используются две независимые хеш-функции h1(k) и h2(k).
@@ -12,10 +12,10 @@ import java.util.NoSuchElementException;
 //  тогда сначала исследуется ячейка с адресом h1(k), если она уже занята,
 //  то рассматривается (h1(k)+h2(k)) mod m, затем (h1(k)+2⋅h2(k)) mod m и так далее.
 //  В общем случае идёт проверка последовательности ячеек (h1(k)+i⋅h2(k)) mod m где i=(0,1,...,m−1)
-public class DoubleHashTable<K,V> implements Iterable<K>{
+public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
     @Override
     public String toString() {
-        return "DoubleHashTable{" +
+        return "DHT{" +
                 "table=" + Arrays.toString(table) +
                 '}';
     }
@@ -23,29 +23,30 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
     //  описание итератора
     @NotNull
     @Override
-    public Iterator<K> iterator() {
+    public Iterator<Map.Entry<K, V>> iterator() {
         return new MyIterator<>(this.table[0]);
     }
-    class MyIterator<K> implements Iterator<K>{
+    class MyIterator<K,V> implements Iterator<Map.Entry<K,V>>{
         DHashItem<K,V> curr;
         private int ind;
         MyIterator(DHashItem<K,V> curr){
             this.curr = curr;
             ind = -1;
         }
+
         @Override
         public boolean hasNext() {
-            if (ind < size-1) {   //  table.length-1
+            if (ind < size-1) {
                 return true;
             }
             return false;
         }
 
         @Override
-        public K next() {
+        public Map.Entry<K, V> next() {
             ind++;
             try {
-                return (K)table[ind].key;
+                return (Map.Entry<K, V>)table[ind];
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw e;
             }
@@ -53,30 +54,31 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
     }
     //  ----------------------------------------------------
     //  описание класса-элемента
-    class DHashItem<K,V> {
+    class DHashItem<K,V> implements Map.Entry<K,V> {
         //  переменные класса-элемента
-        private V item;
         private K key;
+        private V item;
 
         DHashItem(K key, V item) {
             this.key = key;
             this.item = item;
         }
-        K getKey() {
+        @Override
+        public K getKey() {
             return key;
         }
-        V getItem() {
+        @Override
+        public V getValue() {
             return item;
         }
-        boolean equals(DHashItem<K,V> item) {
-            return key == item.key;
+        @Override
+        public V setValue(V value) {
+            return null;
         }
-
         @Override
         public String toString() {
-            return "{" +
-                    "item=" + item +
-                    ", key=" + key +
+            return "{" + key +
+                    "/" + item +
                     '}';
         }
     }
@@ -91,21 +93,26 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
         delet = new boolean[n];
         size = 0;
     }
-//    void add(Item item) {
+    //  2.1 - добавить пару ключ-значение
     void add(K key, V item) {
         int x = getHash1(key);
         int y = getHash2(key);
-        for (int i = 0; i < table.length; i++) {
+        //  на малых знчениях table.length выражение table.length/10 будет = 0
+        for (int i = 0; i < table.length / 10; i++) {
+            x = (x + i * y) % table.length;
+//            System.out.println("add - key = " + key + ", i = " + i + ", x = " + x + ", y = " + y);
+            //  проверка свободной ячейки с индексом x
             if (table[x] == null || delet[x]) {
+                //  создать объект для размещения
                 DHashItem<K,V> li = new DHashItem(key, item);
+                //  поместить его в ячейку (x) массива
                 table[x] = li;
                 delet[x] = false;
-                size++;
-                return;
+                size++; //  количество элементов в таблице
+                return; //  все замечательно
             }
-            x = (x + i * y) % table.length;
+//            x = (x + i * y) % table.length;
         }
-        System.out.println("Необходимо расширение таблицы");
         resize();
         add(key, item); //  повторный вызов
         //        table.resize(); // ошибка, требуется увеличить размер таблицы
@@ -113,7 +120,8 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
     //  увеличение размера таблицы
     void resize(){
         int oldSize = table.length;
-        int newSize = oldSize * 2;
+        int newSize = primeNext(oldSize * 2);   //  расчет простого числа
+        System.out.println("Расширение таблицы, old = " + oldSize + ", new = " + newSize);
         //  интересная конструкция с объявлением нового массива
         DHashItem<K,V>[] newArray = new DHashItem[newSize];
         System.arraycopy(table, 0, newArray, 0, oldSize);
@@ -122,6 +130,7 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
         System.arraycopy(delet, 0, newDelet, 0, oldSize);
         delet = newDelet;
     }
+    //  2.2 - получить значение по ключу
     V get(K key) {
         int x = getHash1(key);
         int y = getHash2(key);
@@ -167,10 +176,11 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
     public int size() {
         return size;
     }
-    //  2.6
-    public Iterator<DoubleHashTable<K,V>> getIterator(){
-        return null;
+    //  2.6 public Iterator<DoubleHashTable<K,V>> getIterator()
+    public MyIterator<K, V> getIterator(){
+        return new MyIterator<K,V>(this.table[0]);
     }
+    //  ----------------------------------------------------
     public int getHash1(K key) {
         return (int)key % table.length;  //  key % table.length
     }
@@ -178,4 +188,18 @@ public class DoubleHashTable<K,V> implements Iterable<K>{
     public int getHash2(K key) {
         return (int)key % (table.length - 1) + 1;
     }
+    //  вычисление простого числа больше заданного
+    boolean prime (int n){
+        for (int i=2; i*i<=n; i++)
+            if (n%i == 0)
+                return false;
+        return true;
+    }
+    int primeNext(int n){
+        while (!prime(n))
+            n++;
+        return n;
+    }
 }
+//более 10% при одной серии пробирований -  что значит одна серия пробирований?
+//[07:10] mazneff: имеется ввиду вставка одного конкретного ключа. А не то, что эти коллизии накопились от нескольких вставок
