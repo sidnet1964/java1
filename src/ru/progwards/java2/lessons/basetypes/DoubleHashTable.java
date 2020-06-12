@@ -15,30 +15,37 @@ import java.util.Map;
 public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
     @Override
     public String toString() {
-        return "DHT{" +
-                "table=" + Arrays.toString(table) +
-                '}';
+        return "DHT{" + "table=" + Arrays.toString(table) + '}' + '\n' + "delet=" + Arrays.toString(delet);
     }
     //  ----------------------------------------------
     //  описание итератора
     @NotNull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
-        return new MyIterator<>(this.table[0]);
+        return new MyIterator<>();  //  this.table[0]
     }
     class MyIterator<K,V> implements Iterator<Map.Entry<K,V>>{
-        DHashItem<K,V> curr;
+        //  DHashItem<K,V> curr;
         private int ind;
-        MyIterator(DHashItem<K,V> curr){
-            this.curr = curr;
+
+        /**
+         * Конструктор класса MyIterator
+         */
+        MyIterator(){
+            //  DHashItem<K,V> curr
+            //  this.curr = curr;
             ind = -1;
         }
 
         @Override
         public boolean hasNext() {
-            if (ind < size-1) {
-                return true;
-            }
+            for (int i = ind+1; i < table.length - 1; i++) {
+//                System.out.println((table[i] != null || delet[i]) + " -> i = " + i + "||" + table[i] + "||" + delet[i]);
+                    if (table[i] != null && !delet[i]) {
+                        ind = i-1;
+                        return true;
+                    }
+                }
             return false;
         }
 
@@ -46,7 +53,13 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         public Map.Entry<K, V> next() {
             ind++;
             try {
-                return (Map.Entry<K, V>)table[ind];
+//                for (int i = ind+1; i < table.length - 1; i++) {
+//                    if (table[i] != null || !delet[i]) {
+//                        ind = i;
+                        return (Map.Entry<K, V>) table[ind];
+//                    }
+//                }
+//                return null;
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw e;
             }
@@ -77,9 +90,7 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         }
         @Override
         public String toString() {
-            return "{" + key +
-                    "/" + item +
-                    '}';
+            return "{" + key + "/" + item + '}';
         }
     }
     //  ----------------------------------------------------
@@ -176,9 +187,10 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
     public int size() {
         return size;
     }
+
     //  2.6 public Iterator<DoubleHashTable<K,V>> getIterator()
     public MyIterator<K, V> getIterator(){
-        return new MyIterator<K,V>(this.table[0]);
+        return new MyIterator<K,V>();   //  this.table[0]
     }
     //  ----------------------------------------------------
     public int getHash1(K key) {

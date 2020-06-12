@@ -6,18 +6,26 @@ public class DoubleTest {
         final int em = 999;
         DoubleHashTable<Integer,String> hTable = new DoubleHashTable(en);
 //        System.out.println(hTable);
-        for (int i=0; i < em; i++)
-            hTable.add(i, "i=" + i);
+//        for (int i=0; i < em; i++)
+//            hTable.add(i, "i=" + i);
+//        hTable.add(3, "i=3/1");
+//        hTable.add(3, "i=3/2");
+        hTable.add(6, "i=6");
+        hTable.add(9, "i=9");
+        hTable.remove(6);
         System.out.println(hTable);
-        System.out.println(hTable.size());
-        System.out.println(hTable.table.length);
+        System.out.println("hTable.size() = " + hTable.size());
+        System.out.println("hTable.table.length = " + hTable.table.length);
 
 //        hTable.remove(101);
 //        System.out.println(hTable);
 //        System.out.println(hTable.size());
 
-//        for (var inic : hTable)
-//            System.out.println(inic);
+        for (var inic : hTable)
+            System.out.println(inic);
+
+        var iter = hTable.getIterator();
+
 //        hTable.add(1, "111");
 //        hTable.change(0, 101);
 //        for (int i=0; i<15; i++)

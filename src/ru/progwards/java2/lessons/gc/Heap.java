@@ -7,8 +7,9 @@ import java.util.List;
 
 public class Heap {
     static short sFill = 1; //  символ заполнения
-    int maxHeapSize;    //  размер кучи
-    byte[] bytes;       // - собственно, куча
+    int allSize;            //  свободной памяти
+    int maxHeapSize;        //  размер кучи
+    byte[] bytes;           // - собственно, куча
     List<Allock> inputList;    //  список (или другая структура данных) свободных блоков
     List<Allock> outputList;   //  список (или другая структура данных) занятых блоков
 
@@ -71,11 +72,13 @@ public class Heap {
     //  ------------------------------------------------------------------------
     //  осуществляет дефрагментацию кучи
     public void defrag(){
+        System.out.println("++ Дефрагментация");
         if (inputList.size() <= 1)
             return; //  пустой список или состоит из одного элемента
         //  отсортировать inputList
         inputList.sort((a, b) -> Integer.compare(a.ptr, b.ptr));
-//        System.out.println(inputList);
+
+        //        System.out.println(inputList);
 //        System.out.println(outputList);
 //        System.out.println(this.toString());
 
@@ -127,12 +130,14 @@ public class Heap {
     //  ------------------------------------------------------------------------
     //  компактизация кучи - перенос всех занятых блоков в начало хипа
     public void compact(){
+        System.out.println("++ Компактизация");
         if (outputList.size() == 0)
             return; //  пустой список, нечего переносить
         //  отсортировать inputList
         inputList.sort((a, b) -> Integer.compare(a.ptr, b.ptr));
         //  отсортировать outputList
         outputList.sort((a, b) -> Integer.compare(a.ptr, b.ptr));
+
         for (int i = 0; i < outputList.size(); i++) {
             Allock oBlock = outputList.get(i);
             for (int j = 0; j < inputList.size(); j++) {
@@ -150,16 +155,16 @@ public class Heap {
                         if ((oBlock.size == iBlock.size)) {
                             //  блоки равны по размеру, обновить оба адреса
                             int iPtr = iBlock.ptr;
-                            iBlock.ptr = oBlock.size;   //  заменить адрес блока
+                            iBlock.ptr = oBlock.ptr;   //  заменить адрес блока
                             oBlock.ptr = iPtr;          //  заменить адрес блока
                         } else {
                             //  обновить элементы списков
                             int oPtr = oBlock.ptr;      //  запомнить одес занятого блока
-                            int oSize = iBlock.size - oBlock.size;  //  разница размеров
+//                            int oSize = iBlock.size - oBlock.size;  //  разница размеров
                             oBlock.ptr = iBlock.ptr;    //  заменить адрес блока
                             iBlock.ptr += oBlock.size;  //  заменить адрес блока
                             iBlock.size -= oBlock.size; //  уменьшить размер свободного блока
-                            inputList.add(new Allock(oPtr, oSize)); //  новый свободный блок на разность
+                            inputList.add(new Allock(oPtr, oBlock.size)); //  новый свободный блок
                         }
                         inputList.set(j, iBlock);
                         outputList.set(i, oBlock);
@@ -167,17 +172,8 @@ public class Heap {
                         inputList.sort((a, b) -> Integer.compare(a.ptr, b.ptr));
                         //  отсортировать outputList
 //                    outputList.sort((a, b) -> Integer.compare(a.ptr, b.ptr));
-
+                        break;  //  выход из цикла по j
                     }
-//                    if (iBlock.size == 0)
-//                        //  удалить пустой блок
-//                        inputList.remove(j);
-//                    else
-//                    {
-//                        inputList.set(j,iBlock);
-//                        outputList.set(i,oBlock);
-//                    }
-                    break;  //  выход из цикла по j
                 }
             }
         System.out.println("Кон i = " + i);
@@ -215,33 +211,38 @@ public class Heap {
         final int mSize = 64;
         Heap extMemory = new Heap(mSize);
         System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
-        System.out.println(extMemory.malloc(2));
+        System.out.println(extMemory.malloc(3));
+        System.out.println(extMemory.malloc(4));
+        System.out.println(extMemory.malloc(5));
+        System.out.println(extMemory.malloc(6));
+        System.out.println(extMemory.malloc(7));
+        System.out.println(extMemory.malloc(8));
+        System.out.println(extMemory.malloc(9));
         System.out.println(extMemory.malloc(2));
 //        System.out.println(extMemory.malloc(16));
+
+        System.out.println("-- Размещение");
         System.out.println(extMemory.inputList);
         System.out.println(extMemory.outputList);
         System.out.println(extMemory.toString());
+
         extMemory.free(2);
-        extMemory.free(4);
+        extMemory.free(0);
 //        extMemory.free(6);
 
-        extMemory.free(10);
-        extMemory.free(12);
-        extMemory.free(14);
+//        extMemory.free(10);
+//        extMemory.free(12);
+//        extMemory.free(14);
 
-//        System.out.println(extMemory.inputList);
-//        System.out.println(extMemory.outputList);
-//        System.out.println(extMemory.toString());
+        System.out.println("-- Освобождение");
+        System.out.println(extMemory.inputList);
+        System.out.println(extMemory.outputList);
+        System.out.println(extMemory.toString());
 
         extMemory.defrag();
 
         System.out.println();
+        System.out.println("-- Дефрагментация");
         System.out.println(extMemory.inputList);
         System.out.println(extMemory.outputList);
         System.out.println(extMemory.toString());
@@ -249,6 +250,15 @@ public class Heap {
         extMemory.compact();
 
         System.out.println();
+        System.out.println("-- Компактизация");
+        System.out.println(extMemory.inputList);
+        System.out.println(extMemory.outputList);
+        System.out.println(extMemory.toString());
+
+        extMemory.defrag();
+
+        System.out.println();
+        System.out.println("-- Дефрагментация");
         System.out.println(extMemory.inputList);
         System.out.println(extMemory.outputList);
         System.out.println(extMemory.toString());
