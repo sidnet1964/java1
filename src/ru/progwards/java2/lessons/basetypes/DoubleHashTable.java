@@ -39,10 +39,13 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
 
         @Override
         public boolean hasNext() {
-            for (int i = ind+1; i < table.length - 1; i++) {
-//                System.out.println((table[i] != null || delet[i]) + " -> i = " + i + "||" + table[i] + "||" + delet[i]);
+            for (int i = ind+1; i < table.length - 0; i++) {
+//                System.out.println((table[i] != null && !delet[i]) + " -> i = " + i + "||" + table[i] + "||" + delet[i]);
                     if (table[i] != null && !delet[i]) {
-                        ind = i-1;
+//  вариант 1                        ind = i-1;
+//  вариант 2
+                        ind = i;
+
                         return true;
                     }
                 }
@@ -51,7 +54,8 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
 
         @Override
         public Map.Entry<K, V> next() {
-            ind++;
+//  вариант 1            ind++;
+//  вариант 2
             try {
 //                for (int i = ind+1; i < table.length - 1; i++) {
 //                    if (table[i] != null || !delet[i]) {
@@ -109,9 +113,10 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         int x = getHash1(key);
         int y = getHash2(key);
         //  на малых знчениях table.length выражение table.length/10 будет = 0
-        for (int i = 0; i < table.length / 10; i++) {
+        for (int i = 0; i < (table.length / 10) + 1; i++) {
             x = (x + i * y) % table.length;
-//            System.out.println("add - key = " + key + ", i = " + i + ", x = " + x + ", y = " + y);
+//            if (i > 0)
+//                System.out.println("add - key = " + key + ", i = " + i + ", x = " + x + ", y = " + y);
             //  проверка свободной ячейки с индексом x
             if (table[x] == null || delet[x]) {
                 //  создать объект для размещения
@@ -198,6 +203,8 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
     }
     //  h2(k)=k mod (m−1)+1
     public int getHash2(K key) {
+        if (table.length == 1)
+            return 1;
         return (int)key % (table.length - 1) + 1;
     }
     //  вычисление простого числа больше заданного

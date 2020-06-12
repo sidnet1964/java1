@@ -2,17 +2,25 @@ package ru.progwards.java2.lessons.basetypes;
 
 public class DoubleTest {
     public static void main(String[] args) {
-        final int en = 13;
-        final int em = 999;
+        final int en = 1;
+        final int em = 9;
         DoubleHashTable<Integer,String> hTable = new DoubleHashTable(en);
 //        System.out.println(hTable);
-//        for (int i=0; i < em; i++)
-//            hTable.add(i, "i=" + i);
-//        hTable.add(3, "i=3/1");
-//        hTable.add(3, "i=3/2");
+        for (int i=0; i < em; i++)
+            hTable.add(i, "i=" + i);
+        hTable.add(3, "i=3/1");
+        hTable.add(3, "i=3/2");
         hTable.add(6, "i=6");
         hTable.add(9, "i=9");
-        hTable.remove(6);
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.add(9, "i=9");
+//        hTable.remove(6);
         System.out.println(hTable);
         System.out.println("hTable.size() = " + hTable.size());
         System.out.println("hTable.table.length = " + hTable.table.length);
