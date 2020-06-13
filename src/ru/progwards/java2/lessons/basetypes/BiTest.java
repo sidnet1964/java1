@@ -9,7 +9,7 @@ public class BiTest {
         final int MILLION = 1;
 //        BiDirList<Integer> list = new BiDirList<>();
 //        BiDirList<Integer> list = BiDirList.of(1, 2, 3);
-        Integer[] arr = {1, 2, 3};
+        Integer[] arr = {1, 2, 3, 4, 5};
         BiDirList<Integer> list = BiDirList.from(arr);
 
         for (Integer inic : list)

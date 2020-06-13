@@ -146,10 +146,10 @@ public class BiDirList<T> implements Iterable<T>{
             return null;
         ListItem<T> current = getHead();
 //        while(current != null) {
-        for (int j = 0; j<i; j++){
-            System.out.println(current.getItem());
+        for (int j = 0; j<i; j++)
             current = current.getNext();
-        }
+//
+//
         return current;
     }
     //  1.5 - получить количество элементов
@@ -180,11 +180,13 @@ public class BiDirList<T> implements Iterable<T>{
             array[index++] = current.item;
             current = current.getNext();
         }
-        System.out.println(Arrays.toString(array));
+//        System.out.println(Arrays.toString(array));
     }
     //  --------------------------------
-    //  1.9 - получить итератор
-    public Iterator<ListItem<T>> getIterator(){
+    //  1.9 public Iterator<BiDirList<T>> getIterator() - получить итератор
+//    public Iterator<BiDirList<T>> getIterator(){
+//    public Iterator<ListItem<T>> getIterator(){
+        public Iterator<T> getIterator() {
         return new MyIterator(head);
     }
     //  --------------------------------

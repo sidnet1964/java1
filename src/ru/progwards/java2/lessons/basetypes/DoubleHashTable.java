@@ -28,12 +28,7 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         //  DHashItem<K,V> curr;
         private int ind;
 
-        /**
-         * Конструктор класса MyIterator
-         */
         MyIterator(){
-            //  DHashItem<K,V> curr
-            //  this.curr = curr;
             ind = -1;
         }
 
@@ -45,7 +40,6 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
 //  вариант 1                        ind = i-1;
 //  вариант 2
                         ind = i;
-
                         return true;
                     }
                 }
@@ -57,13 +51,7 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
 //  вариант 1            ind++;
 //  вариант 2
             try {
-//                for (int i = ind+1; i < table.length - 1; i++) {
-//                    if (table[i] != null || !delet[i]) {
-//                        ind = i;
                         return (Map.Entry<K, V>) table[ind];
-//                    }
-//                }
-//                return null;
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw e;
             }
@@ -115,8 +103,6 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         //  на малых знчениях table.length выражение table.length/10 будет = 0
         for (int i = 0; i < (table.length / 10) + 1; i++) {
             x = (x + i * y) % table.length;
-//            if (i > 0)
-//                System.out.println("add - key = " + key + ", i = " + i + ", x = " + x + ", y = " + y);
             //  проверка свободной ячейки с индексом x
             if (table[x] == null || delet[x]) {
                 //  создать объект для размещения
@@ -151,8 +137,9 @@ public class DoubleHashTable<K,V> implements Iterable<Map.Entry<K,V>>{
         int x = getHash1(key);
         int y = getHash2(key);
         for (int i = 0; i < table.length; i++) {
+//            System.out.println(Integer.compare(table[x].key, key));
             if (table[x] != null)
-                if (table[x].key == key && !delet[x])
+                if ((int)table[x].key == (int) key && !delet[x])
                     return table[x].item;
                 else
             return null;
