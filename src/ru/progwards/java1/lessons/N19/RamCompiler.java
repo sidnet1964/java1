@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+//  рекомендации - ссылки на методы, массив методов
 public class RamCompiler {
     final static int R0 = 0;   //  индекс нулевого регистра
     final static int Z0 = 0;   //  нулевое значение (по умолчанию в новом регистре)
