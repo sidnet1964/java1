@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class HeapTest {
-    static final int maxSize = 800_000_000;
+    static final int maxSize = 900_000_000;
 //    static final int maxSize = 1_048_576;
     static final int maxSmall = 10;
     static final int maxMedium = 100;
@@ -35,13 +35,14 @@ public class HeapTest {
             size %= maxHuge;
         return size > (maxSize-allocated)-1 ? (maxSize-allocated)/2+1 : size+1;
     }
-
+//  ====================================
     public static void main(String[] args) throws InvalidPointerException, OutOfMemoryException {
         Heap heap = new Heap(maxSize);
         ArrayDeque<Block> blocks = new ArrayDeque<>();
         int count = 0;
         int allocTime = 0;
         int freeTime = 0;
+        heap.start = System.currentTimeMillis(); //  отсчет от момента создания объекта
 
         long start = System.currentTimeMillis();
         // alloc and free 30% random
@@ -73,9 +74,13 @@ public class HeapTest {
                 //blocks.remove(n);
             }
             n = Math.abs(ThreadLocalRandom.current().nextInt()%100000);
-            if (n == 0)
-                System.out.println(maxSize-allocated);
+//  временно отключить
+//            if (n == 0)
+//                System.out.println(maxSize-allocated);
         }
+        heap.stop = System.currentTimeMillis();
+        System.out.println(heap.iter + "/" + (heap.stop - start) + "/" + heap.freeTree.size());
+
         long stop = System.currentTimeMillis();
         System.out.println("malloc time: "+allocTime+" free time: "+freeTime);
         System.out.println("total time: "+(stop-start)+" count: "+count);
