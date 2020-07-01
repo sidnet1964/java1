@@ -1,13 +1,11 @@
 package ru.progwards.java2.lessons.gc;
 
-import ru.progwards.java2.lessons.gc.OutOfMemoryException;
-
 import java.util.ArrayDeque;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class HeapTest {
-    static final int maxSize = 900_000_000;
-//    static final int maxSize = 268_435_456;
+    static final int maxSize = 800_000_000;
+//    static final int maxSize = 1_048_576;
     static final int maxSmall = 10;
     static final int maxMedium = 100;
     static final int maxBig = 1_000;
@@ -38,7 +36,7 @@ public class HeapTest {
         return size > (maxSize-allocated)-1 ? (maxSize-allocated)/2+1 : size+1;
     }
 
-    public static void main(String[] args) throws InvalidPointerException, ru.progwards.java2.lessons.gc.InvalidPointerException, OutOfMemoryException {
+    public static void main(String[] args) throws InvalidPointerException, OutOfMemoryException {
         Heap heap = new Heap(maxSize);
         ArrayDeque<Block> blocks = new ArrayDeque<>();
         int count = 0;
@@ -83,11 +81,11 @@ public class HeapTest {
         System.out.println("total time: "+(stop-start)+" count: "+count);
         System.out.println(heap.delBlock + "/" + heap.insBlock+"/"+heap.freBlock);
         System.out.println("busyTree.size() = " + heap.busyTree.size());
-        System.out.println("freeList.size() = " + heap.freeTree.size());
+        System.out.println("freeTree.size() = " + heap.freeTree.size());
         System.out.println("maxHeapSize  = " + heap.maxHeapSize);
         System.out.println("heap.allSize = " + heap.allSize);
 //        System.out.println("busyTree = " + heap.busyTree);
-        System.out.println("freeList = " + heap.freeTree);
+        System.out.println("freeTree = " + heap.freeTree);
     }
 }
 //  static final int maxSize = 932_735_283;
@@ -158,3 +156,4 @@ public class HeapTest {
 //freeList.size() = 1621
 //maxHeapSize  = 900000000
 //heap.allSize = 899953895
+
