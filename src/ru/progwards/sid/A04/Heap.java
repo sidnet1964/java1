@@ -1,4 +1,7 @@
-package ru.progwards.java2.lessons.gc;
+package ru.progwards.sid.A04;
+
+import ru.progwards.java2.lessons.gc.InvalidPointerException;
+import ru.progwards.java2.lessons.gc.OutOfMemoryException;
 
 import java.util.*;
 
@@ -13,10 +16,10 @@ public class Heap {
     int allSize;            //  занято памяти
     int maxHeapSize;        //  размер кучи
     byte[] bytes;           // - собственно, куча
+    String[] subStr;        // массив подстрок с адресами
     TreeMap<Integer, Integer> busyTree; //  карта занятых блоков (+)
     /// новые переменные
-    TreeMap<Integer, TreeSet<Integer>> freeTree;
-    TreeSet<Integer> freeSet;   //  пустая заготовка для одного набора
+    TreeMap<Integer, String> freeTree;
 
     public Heap(int maxHeapSize) {
 //        start = System.currentTimeMillis(); //  отсчет от момента создания объекта
@@ -25,10 +28,7 @@ public class Heap {
         busyTree = new TreeMap<>();
         /// новые переменные
         freeTree = new TreeMap<>();
-        freeSet = new TreeSet<>(Set.of(0));
-//        freeSet.add(0);     //  нулевой адрес блока
-        freeTree.put(maxHeapSize, freeSet);
-//        freeHash.put(bytes.length, new TreeSet<>(Arrays.asList(0)));   //  спионерил
+        freeTree.put(maxHeapSize, "0");
 
 //debug        memFill(0, maxHeapSize, (byte) (-1*(sClea++))); //  первоначальное заполнение (debug)
     }
@@ -52,25 +52,35 @@ public class Heap {
         //  поиск сбободного участка
         if (freeTree.size() == 0){
             System.out.println("freeTree.size() == 0 -> " + freeTree.size());
-            throw new OutOfMemoryException("Нет свободных блоков для ", size);
+            throw new ru.progwards.java2.lessons.gc.OutOfMemoryException("Нет свободных блоков для ", size);
         }
 //        System.out.println("seek = " + size + " freeTree = " + freeTree);
 //        long start = System.currentTimeMillis();
-        Map.Entry<Integer, TreeSet<Integer>> firstPtr = freeTree.ceilingEntry(size);
+        Map.Entry<Integer, String> firstPtr = freeTree.ceilingEntry(size);
 //        System.out.println("size = " + freeTree.size() + " firstPtr = " + firstPtr);
 //          if (firstPtr == null) - запустить компактизацию
         if (firstPtr != null){
             int findSize = firstPtr.getKey();    //  реальный размер блока
-            TreeSet<Integer> findSet = firstPtr.getValue(); //  набор адресов
-//  Retrieves and removes the first (lowest) element, or returns null if this set is empty.
-            int findPtr = findSet.pollFirst();  //  возвращает первый элемент и удаляет
-//            if (findPtr == null) - убедиться, что этого не произойдет
-            if (findSet.isEmpty())
+            String findSet = firstPtr.getValue(); //  набор адресов
+            //  парсить строку findSet
+            String delimeter = "!"; // Разделитель
+            subStr = findSet.split(delimeter, 2); // Разбить строку str с порогом равным 3, который означает, как много подстрок, должно быть возвращено.
+//            int findPtr = findSet.pollFirst();  //  возвращает первый элемент и удаляет
+            int findPtr = Integer.valueOf(subStr[0]);  //  возвращает первый элемент и удаляет
+//            if (findSet.isEmpty())
+//                freeTree.remove(findSize);
+            if (subStr.length == 1) //  в массиве один элемент
                 freeTree.remove(findSize);
-            else {
-                //  блок для исследования ситуации
-                System.out.println("Запрос  = " + size + " остаток в findSet = " + findSet);
+            else
+            {
+                //  необходимо обновить freeTree
+                freeTree.replace(findSize, subStr[1]);    /// проверить необходимость
             }
+
+//            else {
+//                //  блок для исследования ситуации
+//                System.out.println("Запрос  = " + size + " остаток в findSet = " + findSet);
+//            }
             //  откусить от этого блока нужный кусок
 //debug            memFill(pointBeginBlock, size, (byte) sFill++);  //  заполнить "кучу" данными
             allSize += size;    //  общий объем занятой памяти
@@ -100,21 +110,22 @@ public class Heap {
 //        memPrint(busyList, (short) 1);
         //  проанализировать общий объем памяти
         if (maxHeapSize - allSize < size)
-            throw new OutOfMemoryException("Нет достаточного размера памяти", size);
+            throw new ru.progwards.java2.lessons.gc.OutOfMemoryException("Нет достаточного размера памяти", size);
 
-        throw new OutOfMemoryException("Нет свободного участка памяти", size);
+        throw new ru.progwards.java2.lessons.gc.OutOfMemoryException("Нет свободного участка памяти", size);
     }
     //  --------------------------------
     public void freeTreeAdd (int keyTree, int valueTreeAsSet) {
         if (freeTree.containsKey(keyTree)){
             //  такой элемент существует, найти его
-            TreeSet<Integer> existSet = freeTree.get(keyTree);
-            existSet.add(valueTreeAsSet);
-//            freeTree.replace(keyTree, existSet);    /// проверить необходимость
+            String existSet = freeTree.get(keyTree);
+//            existSet.add(valueTreeAsSet);
+            existSet = String.valueOf(valueTreeAsSet) + "!" + existSet;
+            freeTree.replace(keyTree, existSet);    /// проверить необходимость
         }
         else {
             //  такого элемента еще нет - создать его
-            TreeSet<Integer> existSet = new TreeSet<>(Set.of(valueTreeAsSet));
+            String existSet = String.valueOf(valueTreeAsSet);
 //            existSet.add(valueTreeAsSet);
             freeTree.put(keyTree, existSet);
         }
@@ -131,17 +142,6 @@ public class Heap {
             //  добавить блок в список свободных (сделать отдельной процедурой)
             //  появился кусок с адресом ptr и размером busySize
             freeTreeAdd(busySize, ptr);
-
-//            if (freeTree.containsKey(busySize)){
-//                //  такой элемент существует, найти его
-//                TreeSet<Integer> existSet = freeTree.get(busySize);
-//                existSet.add(ptr);
-//                freeTree.replace(busySize, existSet);
-//            }
-//            else {
-//                //  такого элемента еще нет - создать его
-//                freeTree.put(busySize, new TreeSet<>(Set.of(ptr)));
-//            }
             return;
         }
         throw new InvalidPointerException("Неверный адрес участка памяти", ptr);
@@ -238,7 +238,7 @@ public class Heap {
                     try {
                         int rand = mathRandomInterval(1, 6);
                         malloc(rand);
-                    } catch (OutOfMemoryException e){
+                    } catch (ru.progwards.java2.lessons.gc.OutOfMemoryException e){
                         System.out.println(e);
                         return;
                     }
@@ -248,7 +248,7 @@ public class Heap {
                 for (int i = 0; i < maxHeapSize; i++){
                     try {
                         malloc(i+1);
-                    } catch (OutOfMemoryException e){
+                    } catch (ru.progwards.java2.lessons.gc.OutOfMemoryException e){
                         System.out.println(e);
                         return;
                     }

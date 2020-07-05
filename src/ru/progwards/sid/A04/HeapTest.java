@@ -1,6 +1,5 @@
 package ru.progwards.sid.A04;
 
-import ru.progwards.java2.lessons.gc.Heap;
 import ru.progwards.java2.lessons.gc.InvalidPointerException;
 import ru.progwards.java2.lessons.gc.OutOfMemoryException;
 
@@ -8,8 +7,8 @@ import java.util.ArrayDeque;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class HeapTest {
-//    static final int maxSize = 900_000_000;
-    static final int maxSize = 1_048_576;
+    static final int maxSize = 900_000_000;
+//    static final int maxSize = 1_048_576;
     static final int maxSmall = 10;
     static final int maxMedium = 100;
     static final int maxBig = 1_000;
