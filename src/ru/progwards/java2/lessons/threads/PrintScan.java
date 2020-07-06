@@ -1,8 +1,9 @@
 package ru.progwards.java2.lessons.threads;
 
 public class PrintScan {
+    static Integer count1 = 0;
+    static Integer count2 = 0;
     static class DocPrin implements Runnable{
-        Integer count1 = 0;
         String name;
         int pages;
         Object obj = new Object();
@@ -13,13 +14,12 @@ public class PrintScan {
         @Override
         public void run() {
             synchronized (count1) {
-                count1++;
+//                count1++;
                 print(this.name, this.pages);
             }
         }
     }
     static class DocScan implements Runnable {
-        Integer count2 = 0;
         String name;
         int pages;
         Object obj = new Object();
@@ -30,7 +30,7 @@ public class PrintScan {
         @Override
         public void run() {
             synchronized (count2) {
-                count2++;
+//                count2++;
                 scan(this.name, this.pages);
             }
         }
@@ -47,14 +47,14 @@ public class PrintScan {
         }
     }
     static void scan(String name, int pages) {
-            for (int i = 0; i < pages; i++) {
-                System.out.println("scan " + name + " page " + (i + 1));
-                try {
-                    Thread.sleep(75);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < pages; i++) {
+            System.out.println("scan " + name + " page " + (i + 1));
+            try {
+                Thread.sleep(75);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {
