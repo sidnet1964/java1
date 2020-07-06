@@ -2,6 +2,7 @@ package ru.progwards.java2.lessons.threads;
 
 public class PrintScan {
     static class DocPrin implements Runnable{
+        Integer count1 = 0;
         String name;
         int pages;
         Object obj = new Object();
@@ -11,11 +12,14 @@ public class PrintScan {
         }
         @Override
         public void run() {
-//            System.out.println(this.name + "/" + this.pages);
-            print(this.name, this.pages);
+            synchronized (count1) {
+                count1++;
+                print(this.name, this.pages);
+            }
         }
     }
     static class DocScan implements Runnable {
+        Integer count2 = 0;
         String name;
         int pages;
         Object obj = new Object();
@@ -25,11 +29,14 @@ public class PrintScan {
         }
         @Override
         public void run() {
-            scan(this.name, this.pages);
+            synchronized (count2) {
+                count2++;
+                scan(this.name, this.pages);
+            }
         }
     }
 
-    static synchronized void print(String name, int pages){
+    static void print(String name, int pages){
         for (int i = 0; i < pages; i++){
             System.out.println("print "+ name + " page " + (i+1));
             try {
@@ -39,19 +46,19 @@ public class PrintScan {
             }
         }
     }
-    static synchronized void scan(String name, int pages){
-        for (int i = 0; i < pages; i++){
-            System.out.println("scan "+ name + " page " + (i+1));
-            try {
-                Thread.sleep(75);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    static void scan(String name, int pages) {
+            for (int i = 0; i < pages; i++) {
+                System.out.println("scan " + name + " page " + (i + 1));
+                try {
+                    Thread.sleep(75);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
 
     public static void main(String[] args) throws InterruptedException {
-        final int count = 10;
+        final int count = 4;
         for (int l = 0; l < count; l++) {
             new Thread(new DocScan("COD_" + l, 5)).start();
             new Thread(new DocPrin("DOC_" + l, 5)).start();
