@@ -1,8 +1,8 @@
 package ru.progwards.java2.lessons.threads;
 
 public class PrintScan {
-    static Integer count1 = 0;
-    static Integer count2 = 0;
+    static Integer count1 = 1;
+    static Integer count2 = 2;
     static class DocPrin implements Runnable{
         String name;
         int pages;
@@ -14,7 +14,6 @@ public class PrintScan {
         @Override
         public void run() {
             synchronized (count1) {
-//                count1++;
                 print(this.name, this.pages);
             }
         }
@@ -30,7 +29,6 @@ public class PrintScan {
         @Override
         public void run() {
             synchronized (count2) {
-//                count2++;
                 scan(this.name, this.pages);
             }
         }
