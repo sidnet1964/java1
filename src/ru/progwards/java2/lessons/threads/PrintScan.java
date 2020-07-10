@@ -1,8 +1,11 @@
 package ru.progwards.java2.lessons.threads;
 
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class PrintScan {
-    static Integer count1 = 1;
-    static Integer count2 = 2;
+    static BigInteger count1 = BigInteger.ZERO;
+    static BigInteger count2 = BigInteger.ONE;
     static class DocPrin implements Runnable{
         String name;
         int pages;
@@ -13,8 +16,11 @@ public class PrintScan {
         }
         @Override
         public void run() {
+//            count1++;      //  сначала все сканирование (первые страницы, вторые), затем печать - аналогично
             synchronized (count1) {
+//                count1++;      //  сначала все сканирование (первые страницы, вторые), затем печать - подокументно
                 print(this.name, this.pages);
+//                count1++;   //  подокументная обработка от 1 до последней страницы каждого документа
             }
         }
     }
@@ -28,8 +34,11 @@ public class PrintScan {
         }
         @Override
         public void run() {
+//            count2++;      //  сначала все сканирование (первые страницы, вторые), затем печать - аналогично
             synchronized (count2) {
+//                count2++;      //  сначала все сканирование (первые страницы, вторые), затем печать - подокументно
                 scan(this.name, this.pages);
+//                count2++;   //  подокументная обработка
             }
         }
     }
