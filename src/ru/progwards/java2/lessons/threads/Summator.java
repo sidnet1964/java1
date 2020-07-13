@@ -31,15 +31,11 @@ public class Summator {
         @Override
         public void run() {
             for (BigInteger i = beg; i.compareTo(end) <= 0;) {
-//                System.out.println(this);
-//                rezult[section] = rezult[section].add(i);
                 rez = rez.add(i);
                 //  счетчик цикла вынесен отдельно
                 i = i.add(BigInteger.ONE);
             }
             rezult[section] = rez;
-//            System.out.println("section - " + section);
-//            System.out.println("section - " + section + " currentThread() " + Thread.currentThread().getState());
         }
     }
     //  --------------------------------
@@ -49,7 +45,6 @@ public class Summator {
         BigInteger mm = number.mod(BigInteger.valueOf(count));      //остаток от деления двух чисел
         List<Thread> threads = new ArrayList<>();
 
-//        System.out.println("nn = " + nn + " mm = " + mm);
         for (int l = 0; l<count; l++) {
             if (l == count-1)
                 //  конец интервала - number
@@ -57,10 +52,13 @@ public class Summator {
             else
                 threads.add(l, new Thread(new MyCounter(l, nn.multiply(BigInteger.valueOf(l)).add(BigInteger.ONE), nn.multiply(BigInteger.valueOf(l+1)))));
             threads.get(l).start();
-            threads.get(l).join();
-//            new Thread(new MyCounter(l, nn.multiply(BigInteger.valueOf(l)).add(BigInteger.ONE), nn.multiply(BigInteger.valueOf(l+1)))).start();
+//            threads.get(l).join();
         }
-        Thread.sleep(500);
+        for (int l = 0; l<count; l++) {
+            threads.get(l).join();
+        }
+
+//        Thread.sleep(500);
 //        System.out.println("=================");
 //        for (Thread one : threads)
 //            System.out.println("section - " + one + " currentThread() " + Thread.currentThread().getState());
@@ -77,14 +75,12 @@ public class Summator {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Summator summator = new Summator(64);
+        Summator summator = new Summator(3);
         BigInteger itog = BigInteger.ZERO;
-        BigInteger pred = BigInteger.valueOf((long)Integer.MAX_VALUE * 2);
+        BigInteger pred = BigInteger.valueOf(Integer.MAX_VALUE / 2);    //  (long)
         long start = System.currentTimeMillis();
 
-//        System.out.println(summator.sum(BigInteger.valueOf(Integer.MAX_VALUE).multiply(BigInteger.valueOf(Integer.MAX_VALUE))));
         itog = summator.sum(pred);
-//        System.out.println(summator.sum(BigInteger.TEN));
 
 //        for (BigInteger i = BigInteger.ONE; i.compareTo(pred) <= 0;) {
 ////                System.out.println(this);

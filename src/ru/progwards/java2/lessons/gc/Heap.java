@@ -28,7 +28,6 @@ public class Heap {
         freeSet = new TreeSet<>(Set.of(0));
 //        freeSet.add(0);     //  нулевой адрес блока
         freeTree.put(maxHeapSize, freeSet);
-//        freeHash.put(bytes.length, new TreeSet<>(Arrays.asList(0)));   //  спионерил
 
 //debug        memFill(0, maxHeapSize, (byte) (-1*(sClea++))); //  первоначальное заполнение (debug)
     }
@@ -131,17 +130,6 @@ public class Heap {
             //  добавить блок в список свободных (сделать отдельной процедурой)
             //  появился кусок с адресом ptr и размером busySize
             freeTreeAdd(busySize, ptr);
-
-//            if (freeTree.containsKey(busySize)){
-//                //  такой элемент существует, найти его
-//                TreeSet<Integer> existSet = freeTree.get(busySize);
-//                existSet.add(ptr);
-//                freeTree.replace(busySize, existSet);
-//            }
-//            else {
-//                //  такого элемента еще нет - создать его
-//                freeTree.put(busySize, new TreeSet<>(Set.of(ptr)));
-//            }
             return;
         }
         throw new InvalidPointerException("Неверный адрес участка памяти", ptr);
