@@ -22,7 +22,6 @@ public class Summator {
 
         public MyCounter(int section, BigInteger beg, BigInteger end) {
             this.section = section;
-//            rezult[section] = BigInteger.ZERO;
             this.beg = beg;
             this.end = end;
             rez = BigInteger.ZERO;
@@ -52,25 +51,16 @@ public class Summator {
             else
                 threads.add(l, new Thread(new MyCounter(l, nn.multiply(BigInteger.valueOf(l)).add(BigInteger.ONE), nn.multiply(BigInteger.valueOf(l+1)))));
             threads.get(l).start();
-//            threads.get(l).join();
         }
         for (int l = 0; l<count; l++) {
             threads.get(l).join();
         }
 
-//        Thread.sleep(500);
-//        System.out.println("=================");
-//        for (Thread one : threads)
-//            System.out.println("section - " + one + " currentThread() " + Thread.currentThread().getState());
-
         BigInteger itog = BigInteger.ZERO;
         for (int l = 0; l<count; l++) {
-            System.out.println("l = " + l + " -> " + rezult[l]);
+//            System.out.println("l = " + l + " -> " + rezult[l]);
             itog = itog.add(rezult[l]);
         }
-//        System.out.println("#################");
-//        for (Thread one : threads)
-//            System.out.println("section - " + one + " currentThread() " + Thread.currentThread().getState());
         return itog;
     }
 
@@ -82,14 +72,6 @@ public class Summator {
 
         itog = summator.sum(pred);
 
-//        for (BigInteger i = BigInteger.ONE; i.compareTo(pred) <= 0;) {
-////                System.out.println(this);
-//            itog = itog.add(i);
-//            //  счетчик цикла вынесен отдельно
-//            i = i.add(BigInteger.ONE);
-//        }
         System.out.println(pred + ";" + itog + ";" + (System.currentTimeMillis() - start));
-//        System.out.println("Integer.MAX_VALUE = " + Integer.MAX_VALUE);
-//        System.out.println("Long.MAX_VALUE = " + Long.MAX_VALUE);
     }
 }
