@@ -3,8 +3,8 @@ package ru.progwards.java2.lessons.gc;
 public class OutOfMemoryException extends RuntimeException {
     public String commandName = "";
 
-    public OutOfMemoryException(String commandName, int commandLine) {
-        super("Ошибка в строке # " + commandLine);
+    public OutOfMemoryException(String commandName, int size) {
+        super("Ошибка при размещении " + size + " байт.");
         this.commandName = commandName;
     }
 

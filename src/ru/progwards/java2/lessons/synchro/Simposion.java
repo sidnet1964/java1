@@ -60,11 +60,11 @@ public class Simposion {
     }
     //  "Aristotle", "Kant", "Spinoza", "Marx", "Russell"
     public static void main(String[] args) {
-        Simposion simposion1 = new Simposion(101, 101);
+        Simposion simposion1 = new Simposion(0, 151);
         simposion1.start();
 //        System.out.println(list);
         try {   //  продолжительность беседы
-            Thread.sleep(1500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

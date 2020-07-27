@@ -3,7 +3,8 @@ package ru.progwards.java2.lessons.synchro;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.lang.System.*;
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
 
 //  25.07.2020 13:30
 public class Fork {
@@ -15,6 +16,7 @@ public class Fork {
         this.number = number;
         this.free = free;
         lock = new ReentrantLock();
+//        Condition isFree = lock.newCondition();
     }
     //  взять вилку
     void pickUp(String philosopher) {
