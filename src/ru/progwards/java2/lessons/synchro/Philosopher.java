@@ -1,9 +1,7 @@
 package ru.progwards.java2.lessons.synchro;
 
-import static java.lang.System.*;
-
 //  25.07.2020 13:30
-public class Philosopher  extends Thread{
+public class Philosopher extends Thread{
     String name;
     Fork right; // - вилка справа
     Fork left;  // - вилка слева
@@ -13,44 +11,48 @@ public class Philosopher  extends Thread{
     long eatSum;        // - суммарное время, которое философ ел в мс
     int count;          // - номер подхода к столу
 
-    public Philosopher(String name, Fork right, Fork left) {
+    public Philosopher(String name, Fork right, Fork left, long reflectTime, long eatTime) {
         this.name = name;
         this.right = right;
         this.left = left;
+        this.reflectTime = reflectTime;
+        this.eatTime = eatTime;
         count = 0;
     }
 
     @Override
     public void run() {
-        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " начинает беседу!");
+//        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " начинает беседу!");
         while (!Simposion.stop) {
             try {   //  философ проголодается через reflectTime мс
-                Thread.sleep(Simposion.reflectTime);
+                Thread.sleep(reflectTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " голоден");
+//            out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " голоден");
             right.pickUp(name);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             left.pickUp(name);
-            out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " ест " + ++count);
+            ++count;
+//            out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " ест " + count);
             try {   //  философ насытится через eatTime мс
-                Thread.sleep(Simposion.eatTime);
+                Thread.sleep(eatTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             left.putDown(name);
             right.putDown(name);
         }
-        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " завершает " + count);
+//        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + name + " завершает " + count);
     }
 
     @Override
     public String toString() {
-        return "Philosopher{" +
-                "name='" + name + '\'' +
-                ", right=" + right +
-                ", left=" + left +
-                '}';
+        return name + "=" + count;
     }
 
     //  Выводит "размышляет " + name на консоль с периодичностью 0.5 сек

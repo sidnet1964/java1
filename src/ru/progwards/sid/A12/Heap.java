@@ -1,27 +1,29 @@
-package ru.progwards.java2.lessons.synchro;
+package ru.progwards.sid.A12;
+//  версия с ceilingKey
 
 import ru.progwards.java2.lessons.gc.InvalidPointerException;
 import ru.progwards.java2.lessons.gc.OutOfMemoryException;
 
+import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.*;
+import static java.lang.System.out;
 
 public class Heap {
 //    static short sFill = 1; //  символ заполнения
 //    static short sClea = 1; //  символ заполнения
 //    long start, stop;
 //    int iter = 0;
+    static BigInteger count1 = BigInteger.ZERO;
     static int delBlock = 0;    //  счетчик удалений
     static int insBlock = 0;    //  счетчик добавлений
     static int freBlock = 0;    //  счетчик освобождений
-    static int allSize;            //  занято памяти
-    static int maxHeapSize;        //  размер кучи
+    static int allSize;         //  общий объем занятой памяти
+    static int maxHeapSize;     //  размер кучи
     byte[] bytes;           // - собственно, куча
     static ConcurrentSkipListMap<Integer, Integer> busyTree; //  карта занятых блоков (+)
-    static ConcurrentSkipListMap<Integer, ConcurrentSkipListSet<Integer>> freeTree;
-    ConcurrentSkipListSet<Integer> freeSet;   //  пустая заготовка для одного набора
+    static ConcurrentSkipListMap<Integer, ConcurrentLinkedQueue<Integer>> freeTree;
+    ConcurrentLinkedQueue<Integer> freeSet;   //  пустая заготовка для одного набора
 
     public Heap(int maximHeapSize) {
 //        start = System.currentTimeMillis(); //  отсчет от момента создания объекта
@@ -29,17 +31,19 @@ public class Heap {
         bytes = new byte[this.maxHeapSize];
         busyTree = new ConcurrentSkipListMap<>();
         freeTree = new ConcurrentSkipListMap<>();
-        freeSet = new ConcurrentSkipListSet<>(Set.of(0));
+//        freeSet = new ConcurrentLinkedQueue<>(Set.of(0));
+        freeSet = new ConcurrentLinkedQueue<>();
+        freeSet.add(0);
         freeTree.put(this.maxHeapSize, freeSet);
     }
     //  --------------------------------
     //  распечатать цепочку блоков
     void memPrint(Iterable<Allock> myList, short nFill){
-        ///out.println("-----------------");
+        out.println("-----------------");
         for (Allock elem : myList ){
-            ///out.println(elem + "~" + nFill);
+            out.println(elem + "~" + nFill);
         }
-        ///out.println("=================");
+        out.println("=================");
     }
     //  ------------------------------------
     static synchronized void incAllSize(int size) {
@@ -56,10 +60,6 @@ public class Heap {
         public Malloc(int size) {
             this.size = size;
         }
-//        @Override
-//        public void run() {
-//            malloc(size);
-//        }
         @Override
         public Integer call() throws Exception {
             Integer res = malloc(size);
@@ -79,70 +79,50 @@ public class Heap {
     }
     //  --------------------------------
     //  "размещает", т.е. помечает как занятый блок памяти с количеством ячеек массива heap равным size
-    public static synchronized int malloc(int size){
+    public static int malloc(int size){
         //  поиск сбободного участка
         if (freeTree.size() == 0){
-            ///out.println("freeTree.size() == 0 -> " + freeTree.size());
+            out.println("freeTree.size() == 0 -> " + freeTree.size());
             throw new OutOfMemoryException("Нет свободных блоков для ", size);
         }
-        ///out.println(Thread.currentThread().getName() + " mall seek = " + size + " freeTree = " + freeTree + " busyTree = " + busyTree.size());
+        out.println(Thread.currentThread().getName() + " mall seek = " + size + " freeTree = " + freeTree + " busyTree = " + busyTree.size());
 //        long start = System.currentTimeMillis();
-        Map.Entry<Integer, ConcurrentSkipListSet<Integer>> firstPtr = freeTree.ceilingEntry(size);
-        ///out.println(Thread.currentThread().getName() + " mall size+ = " + freeTree.size() + " firstPtr = " + firstPtr);
-//          if (firstPtr == null) - запустить компактизацию
-        if (firstPtr != null){
-            int findSize = firstPtr.getKey();    //  реальный размер блока
-            ConcurrentSkipListSet<Integer> findSet = firstPtr.getValue(); //  набор адресов
-            ///out.println(Thread.currentThread().getName() + " mall size++ = " + findSet.size() + " findSet = " + findSet);
-//            System.///out.println("Runnable - " + Thread.currentThread().getName());
-            int findPtr = 0;
-            findPtr = findSet.pollFirst();  //  возвращает первый элемент и удаляет
-//            try {
-//                ///out.println(Thread.currentThread().getName() + " mall анализ findSet = " + findSet);
-//                findPtr = findSet.pollFirst();  //  возвращает первый элемент и удаляет
-//            } catch (NullPointerException e){
-//                ///out.println(Thread.currentThread().getName() + " mall error findPtr = " + findPtr);
-//                e.printStackTrace();
-//            }
-            if (findSet.isEmpty())
-                freeTree.remove(findSize);
-            else {
-                //  блок для исследования ситуации
-                ///out.println(Thread.currentThread().getName() + " mall Запрос  = " + size + " остаток в findSet = " + findSet);
-            }
-            //  откусить от этого блока нужный кусок
+        synchronized (count1) {
+        Integer firstKey = freeTree.ceilingKey(size);
+//            out.println(Thread.currentThread().getName() + " mall size+ = " + freeTree.size() + " firstPtr = " + firstPtr);
+//          if (firstKey == null)   //  запустить компактизацию
+            if (firstKey != null) {
+                ConcurrentLinkedQueue<Integer> findSet = freeTree.get(firstKey); //  набор адресов
+//                out.println(Thread.currentThread().getName() + " mall size++ = " + findSet.size() + " findSet = " + findSet);
+                int findPtr = findSet.poll();  //  возвращает первый элемент и удаляет
+                if (findSet.isEmpty())
+                    freeTree.remove(firstKey);
+                else {
+                    //  блок для исследования ситуации
+                    out.println(Thread.currentThread().getName() + " mall Запрос  = " + size + " остаток в findSet = " + findSet);
+                }
+                //  откусить от этого блока нужный кусок
 //debug            memFill(pointBeginBlock, size, (byte) sFill++);  //  заполнить "кучу" данными
-//            allSize += size;    //  общий объем занятой памяти
-              incAllSize(size);     //  allSize += size   ####################
-            if (size == findSize) {
-                //  создать запись в списке занятых областей
-                busyTree.put(findPtr, size);
-                //  если блок занять полностью - удалить из списка свободных
-                //  уже удален (при чтении)
-                delBlock++;
-            }
-            else {
-                //  вариант с перезаписью блока
-                //  создать запись в списке занятых областей
-                busyTree.put(findPtr, size);
-                //  остался кусок размером (findSize - size) с адресом (findPtr + size)
-                freeTreeAdd(findSize - size, findPtr + size);
-                insBlock++;
-            }
-//            if (iter++ % 10_000 == 0) {
-//                stop = System.currentTimeMillis();
-//                System.///out.println(iter + "/" + (stop - start) + "/" + freeTree.size());
-//            }
+                incAllSize(size);     //  allSize += size   ####################
+                busyTree.put(findPtr, size);    //  создать запись в списке занятых областей
+                if (size == firstKey) {
+                    delBlock++; //  уже удален (при чтении)
+                } else {        //  вариант с перезаписью блока
+                    //  остался кусок размером (findSize - size) с адресом (findPtr + size)
+                    freeTreeAdd(firstKey - size, findPtr + size);
+                    insBlock++;
+                }
 //            try {
 //                Thread.currentThread().wait(1);
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-            return findPtr;
+                return findPtr;
+            }
         }
-        ///out.println("-- Ошибка размещения = " + size);
-        ///out.println(freeTree);
-        ///out.println(busyTree);
+        out.println("-- Ошибка размещения = " + size);
+        out.println(freeTree);
+        out.println(busyTree);
 
         //        memPrint(freeHash, (short) 0);
         //        memPrint(busyList, (short) 1);
@@ -153,16 +133,18 @@ public class Heap {
         throw new OutOfMemoryException("Нет свободного участка памяти", size);
     }
     //  --------------------------------
-    public static void freeTreeAdd(int keyTree, int valueTreeAsSet) {
+    public static synchronized void freeTreeAdd(int keyTree, int valueTreeAsSet) {
         if (freeTree.containsKey(keyTree)){
             //  такой элемент существует, найти его
-            ConcurrentSkipListSet<Integer> existSet = freeTree.get(keyTree);
+            ConcurrentLinkedQueue<Integer> existSet = freeTree.get(keyTree);
             existSet.add(valueTreeAsSet);
+            int x = 0;
         }
-        else {
-            //  такого элемента еще нет - создать его
-            ConcurrentSkipListSet<Integer> existSet = new ConcurrentSkipListSet<>(Set.of(valueTreeAsSet));
+        else {  //  такого элемента еще нет - создать его
+            ConcurrentLinkedQueue<Integer> existSet = new ConcurrentLinkedQueue<>();
             freeTree.put(keyTree, existSet);
+            existSet.add(valueTreeAsSet);
+            int y = 0;
         }
     }
 
@@ -176,7 +158,7 @@ public class Heap {
             incAllSize(-busySize);     //  allSize += size   ####################
             busyTree.remove(ptr);   //  удалить блок из списка занятых
             freeTreeAdd(busySize, ptr);     //  добавить блок в список свободных
-            ///out.println(Thread.currentThread().getName() + " free size- = " + freeTree.size() + " firstPtr = " + ptr);
+            out.println(Thread.currentThread().getName() + " free size- = " + freeTree.size() + " ptr = " + ptr);
             return;
         }
         throw new InvalidPointerException("Неверный адрес участка памяти", ptr);
@@ -207,13 +189,13 @@ public class Heap {
         Future<Integer> future3 = es.submit(new Malloc(6));
         Future<Integer> future4 = es.submit(new Malloc(8));
 //        es.shutdown();
-        ///out.println(extMemory.freeTree);
-        ///out.println(extMemory.busyTree);
+        out.println(extMemory.freeTree);
+        out.println(extMemory.busyTree);
         es.execute(new Free(0));
         es.execute(new Free(12));
         es.shutdown();
-        ///out.println(extMemory.freeTree);
-        ///out.println(extMemory.busyTree);
+        out.println(extMemory.freeTree);
+        out.println(extMemory.busyTree);
     }
     //  ------------------------------------
     public static final int mathRandomInterval( int min, int max) {
@@ -229,7 +211,7 @@ public class Heap {
                         int rand = mathRandomInterval(1, 6);
                         malloc(rand);
                     } catch (OutOfMemoryException e){
-                        ///out.println(e);
+                        out.println(e);
                         return;
                     }
                 }
@@ -239,7 +221,7 @@ public class Heap {
                     try {
                         malloc(i+1);
                     } catch (OutOfMemoryException e){
-                        ///out.println(e);
+                        out.println(e);
                         return;
                     }
                 }
@@ -249,27 +231,7 @@ public class Heap {
                     try {
                         malloc(i+1);
                     } catch (OutOfMemoryException e){
-                        ///out.println(e);
-                        return;
-                    }
-                }
-                break;
-        }
-    }
-    //  ------------------------------------
-    //  вспомагательная процедура освобождения
-    public void aFree(int step) {
-//        Allock oBlock;
-        switch (step) {
-            case 0: //  освобождение случайного блока
-                int rand = mathRandomInterval(0, busyTree.size());
-                ///out.println("Освобождение блока # " + rand + " из " + busyTree.size());
-                int k = 0;
-                for(Map.Entry<Integer, Integer> entry : busyTree.entrySet()) {
-//                    System.///out.println(entry.getKey() + " -> " + entry.getValue());
-                    if (k++ == rand) {
-                        free(entry.getKey());
-//                        Future<?> future = es.submit(new Free(entry.getKey()));
+                        out.println(e);
                         return;
                     }
                 }
@@ -278,11 +240,3 @@ public class Heap {
     }
 }
 //------------------------------------------------------------------------------
-//  0
-//  2
-//  4
-//  6
-//  {120=[8]}
-//  {0=2, 2=2, 4=2, 6=2}
-//  {2=[6], 120=[8]}
-//  {2=2, 4=2}

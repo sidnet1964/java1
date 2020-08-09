@@ -1,7 +1,6 @@
 package ru.progwards.java2.lessons.threads;
 
 import java.math.BigInteger;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrintScan {
     static BigInteger count1 = BigInteger.ZERO;

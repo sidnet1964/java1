@@ -7,6 +7,7 @@ public class WalkRunnable implements Runnable {
     public void run() {
         for (int i = 0; i < 10; i++) {
             System.out.println("WalkRunnable - " + Thread.currentThread().getState());
+            System.out.println("WalkRunnable - " + Thread.currentThread());
             System.out.println(Thread.currentThread().getPriority());  //  Получить значение приоритета потока
             System.out.println(Thread.currentThread().getThreadGroup());
             try {

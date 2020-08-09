@@ -6,7 +6,7 @@ public class WalkTalk {
         TalkThread talk = new TalkThread();
         Thread walk = new Thread(new WalkRunnable());
 // запуск потоков
-        talk.start();
+//        talk.start();
         walk.start();
 // WalkRunnable w = new WalkRunnable(); // просто объект, не поток
 // w.run(); или talk.run(); // выполнится метод, но поток не запустится!
