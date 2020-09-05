@@ -9,7 +9,7 @@ public class HeapTest {
     static final int THREADS_COUNT = 3;
     static final int THREAD_SLEEP = 1;
 //    static final int maxSize = 1_932_735_283;
-    static final int maxSize = 900_000_000;
+    static final int maxSize = 100_000;
     static final int maxSmall = 10;
     static final int maxMedium = 100;
     static final int maxBig = 1000;

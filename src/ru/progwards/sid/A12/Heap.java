@@ -1,11 +1,10 @@
 package ru.progwards.sid.A12;
 //  версия с ceilingKey
-
 import ru.progwards.java2.lessons.gc.InvalidPointerException;
 import ru.progwards.java2.lessons.gc.OutOfMemoryException;
 
-import java.math.BigInteger;
 import java.util.Arrays;
+
 import java.util.concurrent.*;
 import static java.lang.System.out;
 
@@ -14,13 +13,13 @@ public class Heap {
 //    static short sClea = 1; //  символ заполнения
 //    long start, stop;
 //    int iter = 0;
-    static BigInteger count1 = BigInteger.ZERO;
+    static Integer count1 = 0;
     static int delBlock = 0;    //  счетчик удалений
     static int insBlock = 0;    //  счетчик добавлений
     static int freBlock = 0;    //  счетчик освобождений
     static int allSize;         //  общий объем занятой памяти
     static int maxHeapSize;     //  размер кучи
-    byte[] bytes;           // - собственно, куча
+    byte[] bytes;               //  собственно, куча
     static ConcurrentSkipListMap<Integer, Integer> busyTree; //  карта занятых блоков (+)
     static ConcurrentSkipListMap<Integer, ConcurrentLinkedQueue<Integer>> freeTree;
     ConcurrentLinkedQueue<Integer> freeSet;   //  пустая заготовка для одного набора
@@ -92,8 +91,8 @@ public class Heap {
 //            out.println(Thread.currentThread().getName() + " mall size+ = " + freeTree.size() + " firstPtr = " + firstPtr);
 //          if (firstKey == null)   //  запустить компактизацию
             if (firstKey != null) {
+
                 ConcurrentLinkedQueue<Integer> findSet = freeTree.get(firstKey); //  набор адресов
-//                out.println(Thread.currentThread().getName() + " mall size++ = " + findSet.size() + " findSet = " + findSet);
                 int findPtr = findSet.poll();  //  возвращает первый элемент и удаляет
                 if (findSet.isEmpty())
                     freeTree.remove(firstKey);
@@ -107,16 +106,12 @@ public class Heap {
                 busyTree.put(findPtr, size);    //  создать запись в списке занятых областей
                 if (size == firstKey) {
                     delBlock++; //  уже удален (при чтении)
-                } else {        //  вариант с перезаписью блока
+                }
+                else {  //  вариант с перезаписью блока
                     //  остался кусок размером (findSize - size) с адресом (findPtr + size)
                     freeTreeAdd(firstKey - size, findPtr + size);
                     insBlock++;
                 }
-//            try {
-//                Thread.currentThread().wait(1);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
                 return findPtr;
             }
         }
@@ -154,7 +149,6 @@ public class Heap {
         freBlock++;
         int busySize = busyTree.get(ptr);   //  размер освобождаемого блока
         if (busySize > 0) {
-//            allSize -= busySize;    //  общий объем занятой памяти
             incAllSize(-busySize);     //  allSize += size   ####################
             busyTree.remove(ptr);   //  удалить блок из списка занятых
             freeTreeAdd(busySize, ptr);     //  добавить блок в список свободных
