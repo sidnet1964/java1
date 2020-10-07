@@ -1,6 +1,5 @@
-package ru.progwards.java2.lessons.synchro;
+package ru.progwards.java2.lessons.synchro_27;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,24 +7,25 @@ import java.util.List;
 public class Simposion {
     public static long fullTime;    //  шкала времени в мс
     public static boolean stop = false;
-    static List<String> names = List.of("Aristotle", "Kant", "Spinoza", "Marx", "Russell");
-    public long reflectTime;   //  время в мс, через которое философ проголодается
-    public long eatTime;       //  время в мс, через которое получив 2 вилки философ наестся и положит вилки на место
-    LinkedList<Fork> forks;
+    static List<String> names = List.of("Aristotle", "Kant", "Marx", "Russell", "Spinoza");
+//    static List<String> names = List.of("Aristotle", "Kant", "Spinoza", "Marx");
+    public static long reflectTime;   //  время в мс, через которое философ проголодается
+    public static long eatTime;       //  время в мс, через которое получив 2 вилки философ наестся и положит вилки на место
+    static LinkedList<Fork> forks;
     LinkedList<Philosopher> list;
 
     public Simposion(long reflectTime, long eatTime) {
         this.reflectTime = reflectTime;
         this.eatTime = eatTime;
-        stop = false;
         list = new LinkedList<>();
         forks = new LinkedList<>() {
             {
+                this.add(new Fork(0, true));
                 this.add(new Fork(1, true));
                 this.add(new Fork(2, true));
                 this.add(new Fork(3, true));
                 this.add(new Fork(4, true));
-                this.add(new Fork(5, true));
+//                this.add(new Fork(5, true));
             }
         };
     }
@@ -34,11 +34,14 @@ public class Simposion {
         fullTime = System.currentTimeMillis();
         int i = 0;
         for (String name : names){
-            int i1 = i;     int i2 = (i + 1) % names.size();
+            int i1 = i;
+            int i2 = (i + 1) % names.size();
             if (i2 < i1) {
-                i1 = i2;    i2 = i;
+                i1 = i2;
+                i2 = i;
             }
-            list.add(new Philosopher(name, forks.get(i1), forks.get(i2), reflectTime, eatTime));
+            System.out.println(i + "/" + i1 + "/" + i2);
+            list.add(new Philosopher(name, i, forks.get(i1), forks.get(i2)));
             list.get(i).start();
             i++;
         }
@@ -61,20 +64,16 @@ public class Simposion {
     }
     //  "Aristotle", "Kant", "Spinoza", "Marx", "Russell"
     public static void main(String[] args) {
-        List<Simposion> statist = new ArrayList<>();
-        for (int i=0; i<100; i++) {
-            statist.add(i, new Simposion(500, 1000));
-            statist.get(i).start();
-//            simposion1.start();
-            try {   //  продолжительность беседы
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            statist.get(i).stop();
-//            simposion1.stop();
-            System.out.println(statist.get(i).list);
+        Simposion simposion1 = new Simposion(0, 151);
+        simposion1.start();
+//        System.out.println(list);
+        try {   //  продолжительность беседы
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        simposion1.stop();
+//        ChannelPool<AudioChannel> pool = new ChannelPool<>(list);
     }
 }
 

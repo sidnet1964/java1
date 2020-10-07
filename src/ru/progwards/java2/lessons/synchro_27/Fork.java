@@ -1,9 +1,10 @@
-package ru.progwards.java2.lessons.synchro;
+package ru.progwards.java2.lessons.synchro_27;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
 
 //  25.07.2020 13:30
 public class Fork {
@@ -20,16 +21,16 @@ public class Fork {
     //  взять вилку
     void pickUp(String philosopher) {
         long t0 = currentTimeMillis();
-//        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " хочет_# " + number + " " + this.free);
+        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " хочет_# " + number + " " + this.free);
         lock.lock();
         this.free = false;
-//        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " берет_# " + number + " " + (currentTimeMillis() - t0));   //   + " " + this.free
+        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " берет_# " + number + " " + (currentTimeMillis() - t0));   //   + " " + this.free
     }
     //  положить вилку
     void putDown(String philosopher) {
         lock.unlock();
         this.free = true;
-//        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " кладет_# " + number);
+        out.println(Simposion.allF(Simposion.forks) + (currentTimeMillis() - Simposion.fullTime) + " " + philosopher + " кладет_# " + number);
     }
 
     @Override
